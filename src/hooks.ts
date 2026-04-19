@@ -5,6 +5,8 @@ import {
   PromptExampleFactory,
   UIExampleFactory,
 } from "./modules/examples";
+import { registerPaperUploadMenuItem } from "./modules/paperUpload";
+import { registerPaperSidebarSection } from "./modules/paperSidebar";
 import { getString, initLocale } from "./utils/locale";
 import { registerPrefsScripts } from "./modules/preferenceScript";
 import { createZToolkit } from "./utils/ztoolkit";
@@ -19,20 +21,15 @@ async function onStartup() {
   initLocale();
 
   BasicExampleFactory.registerPrefs();
-
-  BasicExampleFactory.registerNotifier();
-
-  KeyExampleFactory.registerShortcuts();
-
-  await UIExampleFactory.registerExtraColumn();
-
-  await UIExampleFactory.registerExtraColumnWithCustomCell();
-
-  UIExampleFactory.registerItemPaneCustomInfoRow();
-
-  UIExampleFactory.registerItemPaneSection();
-
-  UIExampleFactory.registerReaderItemPaneSection();
+  registerPaperSidebarSection();
+  // Example-only features are disabled to avoid interfering with functional testing.
+  // BasicExampleFactory.registerNotifier();
+  // KeyExampleFactory.registerShortcuts();
+  // await UIExampleFactory.registerExtraColumn();
+  // await UIExampleFactory.registerExtraColumnWithCustomCell();
+  // UIExampleFactory.registerItemPaneCustomInfoRow();
+  // UIExampleFactory.registerItemPaneSection();
+  // UIExampleFactory.registerReaderItemPaneSection();
 
   await Promise.all(
     Zotero.getMainWindows().map((win) => onMainWindowLoad(win)),
@@ -68,19 +65,16 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
     text: `[30%] ${getString("startup-begin")}`,
   });
 
-  UIExampleFactory.registerStyleSheet(win);
+  // UIExampleFactory.registerStyleSheet(win);
+  // UIExampleFactory.registerRightClickMenuItem();
 
-  UIExampleFactory.registerRightClickMenuItem();
+  registerPaperUploadMenuItem();
 
-  UIExampleFactory.registerRightClickMenuPopup(win);
-
-  UIExampleFactory.registerWindowMenuWithSeparator();
-
-  PromptExampleFactory.registerNormalCommandExample();
-
-  PromptExampleFactory.registerAnonymousCommandExample(win);
-
-  PromptExampleFactory.registerConditionalCommandExample();
+  // UIExampleFactory.registerRightClickMenuPopup(win);
+  // UIExampleFactory.registerWindowMenuWithSeparator();
+  // PromptExampleFactory.registerNormalCommandExample();
+  // PromptExampleFactory.registerAnonymousCommandExample(win);
+  // PromptExampleFactory.registerConditionalCommandExample();
 
   await Zotero.Promise.delay(1000);
 
@@ -90,7 +84,7 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   });
   popupWin.startCloseTimer(5000);
 
-  addon.hooks.onDialogEvents("dialogExample");
+  // addon.hooks.onDialogEvents("dialogExample");
 }
 
 async function onMainWindowUnload(win: Window): Promise<void> {

@@ -9,3 +9,7 @@ item-section-example2-sidenav-tooltip =
 item-section-example2-button-tooltip =
     .tooltiptext = Unregister this section
 item-info-row-example-label = Example Row
+item-section-paper-plane-head-text =
+    .label = Paper Plane X
+item-section-paper-plane-sidenav-tooltip =
+    .tooltiptext = Paper Plane X paper status

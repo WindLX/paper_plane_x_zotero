@@ -1,24 +1,24 @@
 {
-  "name": "zotero-plugin-template",
+  "name": "paper-plane-x-zotero",
   "type": "module",
-  "version": "3.1.0",
-  "description": "Zotero Plugin Template",
+  "version": "0.1.0",
+  "description": "Zotero plugin for uploading selected papers to Paper Plane X",
   "config": {
-    "addonName": "Zotero Plugin Template",
-    "addonID": "addontemplate@euclpts.com",
-    "addonRef": "addontemplate",
-    "addonInstance": "AddonTemplate",
-    "prefsPrefix": "extensions.zotero.addontemplate"
+    "addonName": "Paper Plane X",
+    "addonID": "paperplanex@windlx.local",
+    "addonRef": "paperplanex",
+    "addonInstance": "PaperPlaneX",
+    "prefsPrefix": "extensions.zotero.paperplanex"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/windingwind/zotero-plugin-template.git"
+    "url": "git+https://github.com/windlx/paper_plane_x_zotero.git"
   },
-  "author": "windingwind",
+  "author": "windlx",
   "bugs": {
-    "url": "https://github.com/windingwind/zotero-plugin-template/issues"
+    "url": "https://github.com/windlx/paper_plane_x_zotero/issues"
   },
-  "homepage": "https://github.com/windingwind/zotero-plugin-template#readme",
+  "homepage": "https://github.com/windlx/paper_plane_x_zotero#readme",
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "start": "zotero-plugin serve",
@@ -30,6 +30,8 @@
     "update-deps": "npm update --save"
   },
   "dependencies": {
+    "katex": "^0.16.45",
+    "marked": "^18.0.2",
     "zotero-plugin-toolkit": "^5.1.0-beta.13"
   },
   "devDependencies": {

@@ -1,0 +1,67 @@
+.ppx-pref-shell {
+  margin: 16px 0;
+  border: none;
+  padding: 0;
+}
+
+.ppx-pref-card {
+  box-sizing: border-box;
+  max-width: 720px;
+  padding: 18px 20px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 12px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(46, 139, 87, 0.14),
+      transparent 45%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+}
+
+.ppx-pref-header h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+.ppx-pref-header p {
+  margin: 8px 0 0;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  line-height: 1.45;
+}
+
+.ppx-pref-row {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.ppx-pref-label {
+  font-weight: 600;
+}
+
+.ppx-pref-input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 560px;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: 8px;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.ppx-pref-input:focus {
+  border-color: #2e8b57;
+  box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.18);
+  outline: none;
+}
+
+.ppx-pref-hint {
+  margin: 0;
+  font-size: 12px;
+  color: color-mix(in srgb, currentColor 66%, transparent);
+}
