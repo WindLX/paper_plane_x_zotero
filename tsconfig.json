@@ -1,5 +1,5 @@
 {
-  "extends": "zotero-types/entries/sandbox/",
+  "extends": "zotero-types/entries/mainWindow/",
   "include": ["src", "typings"],
   "exclude": ["build", "addon", "src/legacy"]
 }
