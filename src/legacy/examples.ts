@@ -32,7 +32,7 @@ export class BasicExampleFactory {
           this.unregisterNotifier(notifierID);
           return;
         }
-        addon.hooks.onNotify(event, type, ids, extraData);
+        this.handleNotify(event, type, ids, extraData);
       },
     };
 
@@ -63,6 +63,23 @@ export class BasicExampleFactory {
   }
 
   @example
+  private static handleNotify(
+    event: string,
+    type: string,
+    ids: Array<string | number>,
+    extraData: { [key: string]: any },
+  ) {
+    ztoolkit.log("legacy notify", event, type, ids, extraData);
+    if (
+      event == "select" &&
+      type == "tab" &&
+      extraData[ids[0]]?.type == "reader"
+    ) {
+      this.exampleNotifierCallback();
+    }
+  }
+
+  @example
   private static unregisterNotifier(notifierID: string) {
     Zotero.Notifier.unregisterObserver(notifierID);
   }
@@ -85,10 +102,10 @@ export class KeyExampleFactory {
     ztoolkit.Keyboard.register((ev, keyOptions) => {
       ztoolkit.log(ev, keyOptions.keyboard);
       if (keyOptions.keyboard?.equals("shift,l")) {
-        addon.hooks.onShortcuts("larger");
+        this.exampleShortcutLargerCallback();
       }
       if (ev.shiftKey && ev.key === "S") {
-        addon.hooks.onShortcuts("smaller");
+        this.exampleShortcutSmallerCallback();
       }
     });
 
@@ -144,7 +161,7 @@ export class UIExampleFactory {
       tag: "menuitem",
       id: "zotero-itemmenu-addontemplate-test",
       label: getString("menuitem-label"),
-      commandListener: (ev) => addon.hooks.onDialogEvents("dialogExample"),
+      commandListener: () => HelperExampleFactory.dialogExample(),
       icon: menuIcon,
     });
   }
@@ -685,9 +702,7 @@ export class HelperExampleFactory {
           listeners: [
             {
               type: "click",
-              listener: (e: Event) => {
-                addon.hooks.onDialogEvents("clipboardExample");
-              },
+              listener: () => HelperExampleFactory.clipboardExample(),
             },
           ],
           children: [
@@ -716,9 +731,7 @@ export class HelperExampleFactory {
           listeners: [
             {
               type: "click",
-              listener: (e: Event) => {
-                addon.hooks.onDialogEvents("filePickerExample");
-              },
+              listener: () => HelperExampleFactory.filePickerExample(),
             },
           ],
           children: [
@@ -747,9 +760,7 @@ export class HelperExampleFactory {
           listeners: [
             {
               type: "click",
-              listener: (e: Event) => {
-                addon.hooks.onDialogEvents("progressWindowExample");
-              },
+              listener: () => HelperExampleFactory.progressWindowExample(),
             },
           ],
           children: [
@@ -778,9 +789,7 @@ export class HelperExampleFactory {
           listeners: [
             {
               type: "click",
-              listener: (e: Event) => {
-                addon.hooks.onDialogEvents("vtableExample");
-              },
+              listener: () => HelperExampleFactory.vtableExample(),
             },
           ],
           children: [
@@ -861,6 +870,6 @@ export class HelperExampleFactory {
 
   @example
   static vtableExample() {
-    ztoolkit.getGlobal("alert")("See src/modules/preferenceScript.ts");
+    ztoolkit.getGlobal("alert")("See src/features/preferences/controller.ts");
   }
 }

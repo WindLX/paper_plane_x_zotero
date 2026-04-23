@@ -2,7 +2,7 @@
   "name": "paper-plane-x-zotero",
   "type": "module",
   "version": "0.1.0",
-  "description": "Zotero plugin for uploading selected papers to Paper Plane X",
+  "description": "Zotero plugin for Paper Plane X",
   "config": {
     "addonName": "Paper Plane X",
     "addonID": "paperplanex@windlx.local",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "katex": "^0.16.45",
+    "lucide": "^1.8.0",
     "marked": "^18.0.2",
     "zotero-plugin-toolkit": "^5.1.0-beta.13"
   },

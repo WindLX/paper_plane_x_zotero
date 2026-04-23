@@ -56,7 +56,7 @@ Si vous utilisez ce dépôt, je vous recommande de mettre le badge suivant dans 
 - Architecture orientée événements, basée sur la programmation fonctionnelle utilisant des squeletteq étendus ;
 - Simple et convivial, il est prêt à l'emploi.
 - ⭐ [Nuveauté !] Rechargement automatique à chaud ! Chaque fois que le code source est modifié, il est automatiquement compilé et rechargé. [Voir ici→]((#auto-hot-reload)
-- Nombreux exemples dans `src/modules/examples.ts` ; ils couvrent la plupart des usages des APIs habituellement utilisées dans les extensions (en utilisant [zotero-plugin-toolkit](https://github.com/windingwind/zotero-plugin-toolkit));
+- Nombreux exemples dans `src/legacy/examples.ts` ; ils couvrent la plupart des usages des APIs habituellement utilisées dans les extensions (en utilisant [zotero-plugin-toolkit](https://github.com/windingwind/zotero-plugin-toolkit));
 - Support de TypeScript :
   - Prise en charge complète de la définition des types pour l'ensemble du projet Zotero, qui est écrit en JavaScript (avec les [zotero-types](https://github.com/windingwind/zotero-types));
   - Variables globales et configuration de l'environnement ;
@@ -70,7 +70,7 @@ Si vous utilisez ce dépôt, je vous recommande de mettre le badge suivant dans 
 
 Ce dépot fournit des exemples pour les API [zotero-plugin-toolkit](https://github.com/windingwind/zotero-plugin-toolkit).
 
-Recherchez `@example` dans `src/examples.ts`. Les exemples sont appelés dans `src/hooks.ts`.
+Recherchez `@example` dans `src/legacy/examples.ts`. Ces exemples sont conservés comme référence et ne sont plus appelés dans `src/hooks.ts`.
 
 ### Exemples basiques
 
@@ -383,7 +383,7 @@ Cette section montre la structure des répertoires d'un modèle.
 |   |-- hooks.ts                  # lifecycle hooks
 |   |-- index.ts                  # main entry
 |   |-- modules                   # sub modules
-|   |   |-- examples.ts
+|   |   |-- legacy/examples.ts
 |   |   `-- preferenceScript.ts
 |   `-- utils                 # utilities
 |       |-- locale.ts

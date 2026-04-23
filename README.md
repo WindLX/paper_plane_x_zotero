@@ -56,7 +56,7 @@ If you are using this repo, I recommended that you put the following badge on yo
 
 - Event-driven, functional programming, under extensive skeleton;
 - Simple and user-friendly, works out-of-the-box.
-- Abundant examples in `src/modules/examples.ts`, covering most of the commonly used APIs in plugins (using [zotero-plugin-toolkit](https://github.com/windingwind/zotero-plugin-toolkit));
+- Abundant examples in `src/legacy/examples.ts`, covering most of the commonly used APIs in plugins (using [zotero-plugin-toolkit](https://github.com/windingwind/zotero-plugin-toolkit));
 - TypeScript support:
   - Full type definition support for the whole Zotero project, which is written in JavaScript (using [zotero-types](https://github.com/windingwind/zotero-types));
   - Global variables and environment setup;
@@ -70,7 +70,7 @@ If you are using this repo, I recommended that you put the following badge on yo
 
 This repo provides examples for [zotero-plugin-toolkit](https://github.com/windingwind/zotero-plugin-toolkit) APIs.
 
-Search `@example` in `src/examples.ts`. The examples are called in `src/hooks.ts`.
+Search `@example` in `src/legacy/examples.ts`. These examples are kept as references and are no longer called in `src/hooks.ts`.
 
 ### Basic Examples
 
@@ -380,7 +380,7 @@ This section shows the directory structure of a template.
 |   |-- hooks.ts                  # lifecycle hooks
 |   |-- index.ts                  # main entry
 |   |-- modules                   # sub modules
-|   |   |-- examples.ts
+|   |   |-- legacy/examples.ts
 |   |   `-- preferenceScript.ts
 |   `-- utils                 # utilities
 |       |-- locale.ts

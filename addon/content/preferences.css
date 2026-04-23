@@ -1,4 +1,29 @@
 .ppx-pref-shell {
+  --ppx-radius-sm: 6px;
+  --ppx-radius-md: 8px;
+  --ppx-border: color-mix(in srgb, currentColor 10%, transparent);
+  --ppx-border-strong: color-mix(in srgb, currentColor 14%, transparent);
+  --ppx-surface:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.14),
+      rgba(255, 255, 255, 0.03)
+    ),
+    var(--material-card-background, transparent);
+  --ppx-surface-muted:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0.04)
+    ),
+    color-mix(in srgb, currentColor 2%, transparent);
+  --ppx-focus: rgba(72, 101, 129, 0.16);
+  --ppx-focus-border: #486581;
+  --ppx-shadow:
+    0 8px 18px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.ppx-pref-shell {
   margin: 16px 0;
   border: none;
   padding: 0;
@@ -8,15 +33,10 @@
   box-sizing: border-box;
   max-width: 720px;
   padding: 18px 20px;
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-  border-radius: 12px;
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(46, 139, 87, 0.14),
-      transparent 45%
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+  border: 1px solid var(--ppx-border);
+  border-radius: var(--ppx-radius-md);
+  background: var(--ppx-surface);
+  box-shadow: var(--ppx-shadow);
 }
 
 .ppx-pref-header h2 {
@@ -47,17 +67,23 @@
   max-width: 560px;
   min-height: 32px;
   padding: 6px 10px;
-  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
-  border-radius: 8px;
+  border: 1px solid var(--ppx-border-strong);
+  border-radius: var(--ppx-radius-sm);
+  background: var(--ppx-surface-muted);
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease;
 }
 
 .ppx-pref-input:focus {
-  border-color: #2e8b57;
-  box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.18);
+  border-color: var(--ppx-focus-border);
+  box-shadow: 0 0 0 2px var(--ppx-focus);
   outline: none;
+}
+
+.ppx-pref-shell.is-invalid .ppx-pref-input {
+  border-color: #c84b31;
+  box-shadow: 0 0 0 2px rgba(200, 75, 49, 0.14);
 }
 
 .ppx-pref-hint {
