@@ -120,7 +120,6 @@ export function extractManualUpdatePayload(
     doi: payload.doi || null,
     custom_meta: payload.customMeta || null,
   };
-  if (quickScan !== undefined) {
     nextPayload.quick_scan = mergeQuickScanTags(
       quickScan,
       extractPaperPlaneTags(item),
