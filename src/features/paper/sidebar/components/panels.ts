@@ -5,6 +5,7 @@ import {
   Save,
   Unlink,
   Upload,
+  Edit,
 } from "lucide";
 import { ProjectSummary } from "../../../../domain/paper";
 import { el } from "../../../../shared/ui/dom";
@@ -217,7 +218,11 @@ export function renderActionBar(doc: Document, vm: PaperSidebarViewModel) {
       getString("paper-panel-action-updating-meta"),
     ),
   );
-  return row;
+  const panel = el(doc, "div", {
+    className: "ppx-panel ppx-action-panel",
+  });
+  panel.appendChild(row);
+  return panel;
 }
 
 function renderProjectRow(

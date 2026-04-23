@@ -1,6 +1,9 @@
+import { FilePenLine } from "lucide";
 import { PaperDetailResponse, QuickScan } from "../../../../domain/paper";
+import { createLucideIcon } from "../../../../shared/ui/icon/lucide";
 import { el } from "../../../../shared/ui/dom";
 import { getString } from "../../../../utils/locale";
+import { PaperSidebarViewModel } from "../types";
 import {
   appendCitedField,
   createCodeField,
@@ -14,6 +17,7 @@ import {
 export function createQuickScanSection(
   doc: Document,
   quickScan: QuickScan | null,
+  vm: PaperSidebarViewModel,
 ) {
   const section = createCollapsibleCard(
     doc,
@@ -21,6 +25,10 @@ export function createQuickScanSection(
     true,
   );
   section.root.classList.add("ppx-panel", "ppx-panel-section");
+  attachJSONEditAction(doc, section.root, !vm.data.remoteDetail, async () => {
+    await vm.actions.openQuickScanEditor();
+  });
+
   if (!quickScan) {
     section.content.appendChild(
       el(doc, "div", {
@@ -55,6 +63,7 @@ export function createQuickScanSection(
 export function createSynthesisSection(
   doc: Document,
   detail: PaperDetailResponse | null,
+  vm: PaperSidebarViewModel,
 ) {
   const section = createCollapsibleCard(
     doc,
@@ -62,6 +71,9 @@ export function createSynthesisSection(
     false,
   );
   section.root.classList.add("ppx-panel", "ppx-panel-section");
+  attachJSONEditAction(doc, section.root, !vm.data.remoteDetail, async () => {
+    await vm.actions.openSynthesisEditor();
+  });
   const synthesis = detail?.synthesis_data;
   if (!synthesis) {
     section.content.appendChild(
@@ -177,6 +189,7 @@ export function createSynthesisSection(
 export function createAnalysisSection(
   doc: Document,
   detail: PaperDetailResponse | null,
+  vm: PaperSidebarViewModel,
 ) {
   const section = createCollapsibleCard(
     doc,
@@ -184,6 +197,9 @@ export function createAnalysisSection(
     false,
   );
   section.root.classList.add("ppx-panel", "ppx-panel-section");
+  attachJSONEditAction(doc, section.root, !vm.data.remoteDetail, async () => {
+    await vm.actions.openAnalysisEditor();
+  });
   const report = detail?.analysis_report;
   if (!report) {
     section.content.appendChild(
@@ -316,4 +332,34 @@ export function createFactCheckSection(
     ),
   );
   return section.root;
+}
+
+function attachJSONEditAction(
+  doc: Document,
+  root: HTMLElement,
+  disabled: boolean,
+  onClick: () => Promise<void>,
+) {
+  const buttonRow = el(doc, "div", { className: "ppx-section-actions" });
+  const editButton = el(doc, "button", {
+    className: "ppx-button is-secondary",
+  }) as HTMLButtonElement;
+  editButton.type = "button";
+  editButton.disabled = disabled;
+  editButton.append(
+    createLucideIcon(doc, FilePenLine, {
+      width: 14,
+      height: 14,
+    }),
+    el(doc, "span", {
+      text: getString("paper-panel-action-edit-json"),
+    }),
+  );
+  editButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    await onClick();
+  });
+  buttonRow.appendChild(editButton);
+  root.querySelector(".ppx-card-summary")?.appendChild(buttonRow);
 }

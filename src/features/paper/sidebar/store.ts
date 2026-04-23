@@ -11,6 +11,15 @@ import {
 import { showPaperNotice } from "../../../infra/zotero/paperNotificationService";
 import { syncQuickScanTagsToItem } from "../../../infra/zotero/paperTagSync";
 import { getString } from "../../../utils/locale";
+import { openStructuredJSONEditorDialog } from "../quickScanEditor/dialog";
+import {
+  createEmptyAnalysisReport,
+  createEmptyQuickScan,
+  createEmptySynthesisData,
+  validateAnalysisJSON,
+  validateQuickScanJSON,
+  validateSynthesisJSON,
+} from "../quickScanEditor/validation";
 import { uploadSingleItem } from "../upload/useCase";
 import { PaperActionState, PaperSidebarState, SidebarDraftState } from "./types";
 
@@ -292,7 +301,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
                 : undefined,
           }
           : undefined;
-        const detail = await paperApiClient.updateMetadata(
+        const detail = await paperApiClient.manualUpdate(
           state.item,
           state.localMeta.paperID,
           statusOverrides,
@@ -303,6 +312,94 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         hydrateDraftFromRemoteDetail();
         await syncAndPersistDetail(detail);
         showPaperNotice(getString("paper-panel-sync-success"), "success");
+      });
+    },
+    async openQuickScanEditor() {
+      if (!state.item || !state.localMeta.paperID || !state.remoteDetail) {
+        showPaperNotice(getString("paper-panel-value-not-synced"), "warning");
+        return;
+      }
+      await openStructuredJSONEditorDialog({
+        title: getString("paper-panel-quick-scan-editor-title"),
+        description: getString("paper-panel-quick-scan-editor-description"),
+        createEmptyValue: createEmptyQuickScan,
+        paperID: state.localMeta.paperID,
+        initialValue: state.remoteDetail.quick_scan || null,
+        updatedAt: state.remoteDetail.updated_at || null,
+        validateJSON: validateQuickScanJSON,
+        onSubmit: async (quickScan) => {
+          const detail = await paperApiClient.manualUpdate(
+            state.item!,
+            state.localMeta.paperID,
+            undefined,
+            quickScan,
+          );
+          patch({ remoteDetail: detail });
+          await resolveProjectNames();
+          hydrateDraftFromRemoteDetail();
+          await syncAndPersistDetail(detail);
+          showPaperNotice(getString("paper-panel-sync-success"), "success");
+        },
+      });
+    },
+    async openSynthesisEditor() {
+      if (!state.item || !state.localMeta.paperID || !state.remoteDetail) {
+        showPaperNotice(getString("paper-panel-value-not-synced"), "warning");
+        return;
+      }
+      await openStructuredJSONEditorDialog({
+        title: getString("paper-panel-synthesis-editor-title"),
+        description: getString("paper-panel-synthesis-editor-description"),
+        createEmptyValue: createEmptySynthesisData,
+        paperID: state.localMeta.paperID,
+        initialValue: state.remoteDetail.synthesis_data || null,
+        updatedAt: state.remoteDetail.updated_at || null,
+        validateJSON: validateSynthesisJSON,
+        onSubmit: async (synthesisData) => {
+          const detail = await paperApiClient.manualUpdate(
+            state.item!,
+            state.localMeta.paperID,
+            undefined,
+            state.remoteDetail?.quick_scan,
+            synthesisData,
+            state.remoteDetail?.analysis_report,
+          );
+          patch({ remoteDetail: detail });
+          await resolveProjectNames();
+          hydrateDraftFromRemoteDetail();
+          await syncAndPersistDetail(detail);
+          showPaperNotice(getString("paper-panel-sync-success"), "success");
+        },
+      });
+    },
+    async openAnalysisEditor() {
+      if (!state.item || !state.localMeta.paperID || !state.remoteDetail) {
+        showPaperNotice(getString("paper-panel-value-not-synced"), "warning");
+        return;
+      }
+      await openStructuredJSONEditorDialog({
+        title: getString("paper-panel-analysis-editor-title"),
+        description: getString("paper-panel-analysis-editor-description"),
+        createEmptyValue: createEmptyAnalysisReport,
+        paperID: state.localMeta.paperID,
+        initialValue: state.remoteDetail.analysis_report || null,
+        updatedAt: state.remoteDetail.updated_at || null,
+        validateJSON: validateAnalysisJSON,
+        onSubmit: async (analysisReport) => {
+          const detail = await paperApiClient.manualUpdate(
+            state.item!,
+            state.localMeta.paperID,
+            undefined,
+            state.remoteDetail?.quick_scan,
+            state.remoteDetail?.synthesis_data,
+            analysisReport,
+          );
+          patch({ remoteDetail: detail });
+          await resolveProjectNames();
+          hydrateDraftFromRemoteDetail();
+          await syncAndPersistDetail(detail);
+          showPaperNotice(getString("paper-panel-sync-success"), "success");
+        },
       });
     },
     async linkProject() {

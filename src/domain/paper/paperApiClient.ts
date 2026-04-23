@@ -6,11 +6,13 @@ import {
   getFirstPdfPath,
 } from "./mappers";
 import {
+  AnalysisReport,
   MessageResponse,
   PaperDetailResponse,
   PaperStatusOverrides,
   ProjectResponse,
   QuickScan,
+  SynthesisData,
   UploadResponse,
 } from "./types";
 
@@ -23,11 +25,13 @@ export interface PaperApiClient {
   getBaseURL(): string;
   uploadFromItem(item: Zotero.Item): Promise<UploadFromItemResult>;
   fetchDetail(paperID: string): Promise<PaperDetailResponse>;
-  updateMetadata(
+  manualUpdate(
     item: Zotero.Item,
     paperID: string,
     statusOverrides?: PaperStatusOverrides,
     quickScan?: QuickScan | null,
+    synthesisData?: SynthesisData | null,
+    analysisReport?: AnalysisReport | null,
   ): Promise<PaperDetailResponse>;
   reprocess(item: Zotero.Item, paperID: string): Promise<UploadResponse>;
   fetchProjectDetail(projectID: string): Promise<ProjectResponse>;
@@ -79,7 +83,14 @@ export function createPaperApiClient(): PaperApiClient {
 
       return parseJSONResponse<PaperDetailResponse>(response);
     },
-    async updateMetadata(item, paperID, statusOverrides, quickScan) {
+    async manualUpdate(
+      item,
+      paperID,
+      statusOverrides,
+      quickScan,
+      synthesisData,
+      analysisReport,
+    ) {
       const baseURL = getPaperServiceBaseURL();
       if (!baseURL) {
         throw new Error("paper service base URL is empty");
@@ -89,6 +100,8 @@ export function createPaperApiClient(): PaperApiClient {
       const payload: Record<string, unknown> = extractManualUpdatePayload(
         item,
         quickScan,
+        synthesisData,
+        analysisReport,
       );
       if (statusOverrides?.extraction_status) {
         payload.extraction_status = statusOverrides.extraction_status;
@@ -282,8 +295,8 @@ function buildMultipartBody(
     chunks.push(
       encoder.encode(
         `--${boundary}\r\n` +
-          `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
-          `${value}\r\n`,
+        `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
+        `${value}\r\n`,
       ),
     );
   };
@@ -291,8 +304,8 @@ function buildMultipartBody(
   chunks.push(
     encoder.encode(
       `--${boundary}\r\n` +
-        `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
-        "Content-Type: application/pdf\r\n\r\n",
+      `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
+      "Content-Type: application/pdf\r\n\r\n",
     ),
   );
   chunks.push(pdfBytes);

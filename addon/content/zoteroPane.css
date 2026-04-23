@@ -185,6 +185,14 @@
   align-items: center;
 }
 
+.ppx-action-bar {
+  justify-content: center;
+}
+
+.ppx-action-panel {
+  padding: 10px 12px;
+}
+
 .ppx-project-row,
 .ppx-project-input-row {
   display: grid;
@@ -280,6 +288,19 @@
   outline: none;
   list-style: none;
   color: color-mix(in srgb, currentColor 86%, transparent);
+}
+
+.ppx-section-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 10px;
+}
+
+.ppx-section-actions .ppx-button {
+  min-height: 26px;
+  padding: 0 10px;
 }
 
 .ppx-card-summary::marker,

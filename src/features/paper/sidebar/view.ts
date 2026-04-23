@@ -39,14 +39,22 @@ export function renderPaperSidebar(
     switch (section.kind) {
       case "quickScan":
         sections.appendChild(
-          createQuickScanSection(doc, section.quickScan || null),
+          createQuickScanSection(
+            doc,
+            section.quickScan || null,
+            vm,
+          ),
         );
         break;
       case "synthesis":
-        sections.appendChild(createSynthesisSection(doc, section.detail || null));
+        sections.appendChild(
+          createSynthesisSection(doc, section.detail || null, vm),
+        );
         break;
       case "analysis":
-        sections.appendChild(createAnalysisSection(doc, section.detail || null));
+        sections.appendChild(
+          createAnalysisSection(doc, section.detail || null, vm),
+        );
         break;
       case "factCheck":
         sections.appendChild(createFactCheckSection(doc, section.detail || null));

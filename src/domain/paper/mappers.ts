@@ -1,7 +1,9 @@
 import {
+  AnalysisReport,
   QuickScan,
   PaperDetailResponse,
   ProjectSummary,
+  SynthesisData,
 } from "./types";
 
 export interface PaperUploadPayload {
@@ -100,23 +102,37 @@ export function extractUploadPayload(item: Zotero.Item): PaperUploadPayload {
 export function extractManualUpdatePayload(
   item: Zotero.Item,
   quickScan?: QuickScan | null,
+  synthesisData?: SynthesisData | null,
+  analysisReport?: AnalysisReport | null,
 ) {
   const payload = extractUploadPayload(item);
   const year = payload.year ? Number.parseInt(payload.year, 10) : null;
-  return {
+  const nextPayload: Record<string, unknown> = {
     title: payload.title || null,
     authors: payload.authors
       ? payload.authors
-          .split(",")
-          .map((author) => author.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((author) => author.trim())
+        .filter(Boolean)
       : [],
     year: Number.isFinite(year || NaN) ? year : null,
     publication: payload.publication || null,
     doi: payload.doi || null,
     custom_meta: payload.customMeta || null,
-    quick_scan: mergeQuickScanTags(quickScan, extractPaperPlaneTags(item)),
   };
+  if (quickScan !== undefined) {
+    nextPayload.quick_scan = mergeQuickScanTags(
+      quickScan,
+      extractPaperPlaneTags(item),
+    );
+  }
+  if (synthesisData !== undefined) {
+    nextPayload.synthesis_data = synthesisData;
+  }
+  if (analysisReport !== undefined) {
+    nextPayload.analysis_report = analysisReport;
+  }
+  return nextPayload;
 }
 
 export function extractPaperPlaneTags(item: Zotero.Item) {
