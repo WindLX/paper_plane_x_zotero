@@ -27,9 +27,7 @@ export const paperMetadataRepository: PaperMetadataRepository = {
   },
   async write(item, patch) {
     const currentExtra = item.getField("extra") || "";
-    const lines = currentExtra
-      .split(/\r?\n/)
-      .filter((line) => line.length > 0);
+    const lines = currentExtra.split(/\r?\n/).filter((line) => line.length > 0);
     const nextLines = [...lines];
 
     if (patch.paperID) {

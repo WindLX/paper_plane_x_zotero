@@ -40,7 +40,11 @@ export function createQuickScanSection(
   }
 
   section.content.append(
-    createTagField(doc, getString("paper-panel-label-tags"), quickScan.tags || []),
+    createTagField(
+      doc,
+      getString("paper-panel-label-tags"),
+      quickScan.tags || [],
+    ),
     createInlineField(
       doc,
       getString("paper-panel-label-verdict"),

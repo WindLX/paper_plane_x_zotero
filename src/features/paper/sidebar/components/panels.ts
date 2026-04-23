@@ -1,12 +1,4 @@
-import {
-  Link,
-  RefreshCw,
-  RotateCw,
-  Save,
-  Unlink,
-  Upload,
-  Edit,
-} from "lucide";
+import { Link, RefreshCw, RotateCw, Save, Unlink, Upload, Edit } from "lucide";
 import { ProjectSummary } from "../../../../domain/paper";
 import { el } from "../../../../shared/ui/dom";
 import { getString } from "../../../../utils/locale";
@@ -40,7 +32,11 @@ export function renderSummaryPanel(doc: Document, vm: PaperSidebarViewModel) {
     getString("paper-panel-summary-title"),
     true,
   );
-  panel.root.classList.add("ppx-panel", "ppx-panel-section", "ppx-summary-panel");
+  panel.root.classList.add(
+    "ppx-panel",
+    "ppx-panel-section",
+    "ppx-summary-panel",
+  );
   panel.content.append(
     renderCopyableLine(
       doc,
@@ -48,10 +44,10 @@ export function renderSummaryPanel(doc: Document, vm: PaperSidebarViewModel) {
       vm.data.localMeta.paperID || getString("paper-panel-value-empty"),
       vm.data.localMeta.paperID
         ? () =>
-          vm.actions.copy(
-            vm.data.localMeta.paperID,
-            getString("paper-panel-copy-success"),
-          )
+            vm.actions.copy(
+              vm.data.localMeta.paperID,
+              getString("paper-panel-copy-success"),
+            )
         : undefined,
     ),
     renderValueLine(
@@ -109,7 +105,7 @@ export function renderSummaryPanel(doc: Document, vm: PaperSidebarViewModel) {
       doc,
       getString("paper-panel-updated-at-label"),
       vm.data.remoteDetail?.updated_at ||
-      getString("paper-panel-value-not-synced"),
+        getString("paper-panel-value-not-synced"),
     ),
   );
   return panel.root;

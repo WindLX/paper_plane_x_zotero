@@ -6,9 +6,9 @@ import { stringifyStructuredJSON } from "./validation";
 
 const QUICK_SCAN_EDITOR_LINE_HEIGHT_PX = 21;
 
-export async function openStructuredJSONEditorDialog<T extends StructuredEditorValue>(
-  options: StructuredJSONEditorOptions<T>,
-) {
+export async function openStructuredJSONEditorDialog<
+  T extends StructuredEditorValue,
+>(options: StructuredJSONEditorOptions<T>) {
   let currentText = stringifyStructuredJSON(
     options.initialValue,
     options.createEmptyValue(),
@@ -18,7 +18,7 @@ export async function openStructuredJSONEditorDialog<T extends StructuredEditorV
   let isSaving = false;
   let statusMessage = "";
   let validationMessage = "";
-  let dialogHelper: any;
+  const dialogHelper: any = new ztoolkit.Dialog(8, 1);
   let lineNumbersEl: HTMLPreElement | null = null;
   let measureEl: HTMLDivElement | null = null;
   let resizeObserver: ResizeObserver | null = null;
@@ -52,9 +52,7 @@ export async function openStructuredJSONEditorDialog<T extends StructuredEditorV
         currentText = textarea.value;
         isDirty = currentText !== initialText;
         validationMessage = "";
-        statusMessage = isDirty
-          ? getString("paper-panel-json-dirty")
-          : "";
+        statusMessage = isDirty ? getString("paper-panel-json-dirty") : "";
         refreshState();
       });
       textarea.addEventListener("scroll", () => {
@@ -73,7 +71,10 @@ export async function openStructuredJSONEditorDialog<T extends StructuredEditorV
         refreshState();
       });
       textarea.addEventListener("keydown", (event: KeyboardEvent) => {
-        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+        if (
+          (event.metaKey || event.ctrlKey) &&
+          event.key.toLowerCase() === "s"
+        ) {
           event.preventDefault();
           void saveFromShortcut();
         }
@@ -99,7 +100,7 @@ export async function openStructuredJSONEditorDialog<T extends StructuredEditorV
     },
   };
 
-  dialogHelper = new ztoolkit.Dialog(8, 1)
+  dialogHelper
     .addCell(0, 0, {
       tag: "div",
       namespace: "html",
@@ -394,8 +395,12 @@ export async function openStructuredJSONEditorDialog<T extends StructuredEditorV
   function syncCurrentLineHighlight(textarea: HTMLTextAreaElement) {
     const caretRowIndex = measureEl
       ? getCaretVisualRowIndex(textarea, currentText, measureEl)
-      : currentText.slice(0, textarea.selectionStart ?? 0).split("\n").length - 1;
-    const top = 14 + caretRowIndex * QUICK_SCAN_EDITOR_LINE_HEIGHT_PX - textarea.scrollTop;
+      : currentText.slice(0, textarea.selectionStart ?? 0).split("\n").length -
+        1;
+    const top =
+      14 +
+      caretRowIndex * QUICK_SCAN_EDITOR_LINE_HEIGHT_PX -
+      textarea.scrollTop;
     textarea.style.backgroundImage = `linear-gradient(180deg,
       transparent ${Math.max(0, top)}px,
       rgba(148, 163, 184, 0.12) ${Math.max(0, top)}px,
@@ -405,28 +410,29 @@ export async function openStructuredJSONEditorDialog<T extends StructuredEditorV
   }
 
   function decorateActionButtons(doc: Document) {
-    const buttonMap: Array<{ id: string; label: string; icon: typeof Wand2 }> = [
-      {
-        id: "ppx-quick-scan-format",
-        label: getString("paper-panel-action-format-json"),
-        icon: Wand2,
-      },
-      {
-        id: "ppx-quick-scan-validate",
-        label: getString("paper-panel-action-validate-json"),
-        icon: CheckCheck,
-      },
-      {
-        id: "ppx-quick-scan-cancel",
-        label: getString("paper-panel-action-cancel"),
-        icon: X,
-      },
-      {
-        id: "ppx-quick-scan-save",
-        label: getString("paper-panel-action-save-json"),
-        icon: Save,
-      },
-    ];
+    const buttonMap: Array<{ id: string; label: string; icon: typeof Wand2 }> =
+      [
+        {
+          id: "ppx-quick-scan-format",
+          label: getString("paper-panel-action-format-json"),
+          icon: Wand2,
+        },
+        {
+          id: "ppx-quick-scan-validate",
+          label: getString("paper-panel-action-validate-json"),
+          icon: CheckCheck,
+        },
+        {
+          id: "ppx-quick-scan-cancel",
+          label: getString("paper-panel-action-cancel"),
+          icon: X,
+        },
+        {
+          id: "ppx-quick-scan-save",
+          label: getString("paper-panel-action-save-json"),
+          icon: Save,
+        },
+      ];
 
     buttonMap.forEach(({ id, label, icon }) => {
       const button = doc.getElementById(id) as HTMLButtonElement | null;
@@ -598,7 +604,10 @@ function getMeasuredRowCount(
   syncMeasureElement(textarea, measureEl);
   measureEl.textContent = normalizeMeasuredText(value);
   const measuredHeight = measureEl.getBoundingClientRect().height;
-  return Math.max(1, Math.ceil(measuredHeight / QUICK_SCAN_EDITOR_LINE_HEIGHT_PX));
+  return Math.max(
+    1,
+    Math.ceil(measuredHeight / QUICK_SCAN_EDITOR_LINE_HEIGHT_PX),
+  );
 }
 
 function buildWrappedLineNumbers(

@@ -164,12 +164,15 @@ export function createPaperApiClient(): PaperApiClient {
         throw new Error("paper service base URL is empty");
       }
 
-      const response = await fetch(buildProjectDetailEndpoint(baseURL, projectID), {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
+      const response = await fetch(
+        buildProjectDetailEndpoint(baseURL, projectID),
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
         },
-      });
+      );
 
       return parseJSONResponse<ProjectResponse>(response);
     },
@@ -270,9 +273,7 @@ async function submitPaper(
 }
 
 function createMultipartBoundary() {
-  return `----paperplanex-${Date.now()}-${Math.random()
-    .toString(16)
-    .slice(2)}`;
+  return `----paperplanex-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function buildMultipartBody(
@@ -295,8 +296,8 @@ function buildMultipartBody(
     chunks.push(
       encoder.encode(
         `--${boundary}\r\n` +
-        `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
-        `${value}\r\n`,
+          `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
+          `${value}\r\n`,
       ),
     );
   };
@@ -304,8 +305,8 @@ function buildMultipartBody(
   chunks.push(
     encoder.encode(
       `--${boundary}\r\n` +
-      `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
-      "Content-Type: application/pdf\r\n\r\n",
+        `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
+        "Content-Type: application/pdf\r\n\r\n",
     ),
   );
   chunks.push(pdfBytes);
@@ -347,7 +348,9 @@ async function parseJSONResponse<T>(response: Response): Promise<T> {
     if (response.status === 409) {
       throw new Error(`409 Conflict: ${errorText || "status conflict"}`);
     }
-    throw new Error(`HTTP ${response.status}: ${errorText || "request failed"}`);
+    throw new Error(
+      `HTTP ${response.status}: ${errorText || "request failed"}`,
+    );
   }
   return (await response.json()) as unknown as T;
 }

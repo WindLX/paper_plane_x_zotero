@@ -1,6 +1,10 @@
 import { el } from "../../../shared/ui/dom";
 import { getString } from "../../../utils/locale";
-import { renderActionBar, renderProjectAssociationPanel, renderSummaryPanel } from "./components/panels";
+import {
+  renderActionBar,
+  renderProjectAssociationPanel,
+  renderSummaryPanel,
+} from "./components/panels";
 import {
   createAnalysisSection,
   createFactCheckSection,
@@ -39,11 +43,7 @@ export function renderPaperSidebar(
     switch (section.kind) {
       case "quickScan":
         sections.appendChild(
-          createQuickScanSection(
-            doc,
-            section.quickScan || null,
-            vm,
-          ),
+          createQuickScanSection(doc, section.quickScan || null, vm),
         );
         break;
       case "synthesis":
@@ -57,7 +57,9 @@ export function renderPaperSidebar(
         );
         break;
       case "factCheck":
-        sections.appendChild(createFactCheckSection(doc, section.detail || null));
+        sections.appendChild(
+          createFactCheckSection(doc, section.detail || null),
+        );
         break;
     }
   });

@@ -111,9 +111,9 @@ export function extractManualUpdatePayload(
     title: payload.title || null,
     authors: payload.authors
       ? payload.authors
-        .split(",")
-        .map((author) => author.trim())
-        .filter(Boolean)
+          .split(",")
+          .map((author) => author.trim())
+          .filter(Boolean)
       : [],
     year: Number.isFinite(year || NaN) ? year : null,
     publication: payload.publication || null,
@@ -145,9 +145,7 @@ export function extractPaperPlaneTags(item: Zotero.Item) {
     ) {
       return;
     }
-    const normalized = rawTag
-      .slice(PAPER_PLANE_TAG_PREFIX.length)
-      .trim();
+    const normalized = rawTag.slice(PAPER_PLANE_TAG_PREFIX.length).trim();
     if (!normalized) {
       return;
     }

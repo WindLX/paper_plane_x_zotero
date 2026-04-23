@@ -17,7 +17,8 @@ export function createPaperSidebarViewModel(
     ui: {
       actions: state.actions,
       statusSummary:
-        state.localMeta.status || getString("paper-panel-placeholder-not-uploaded"),
+        state.localMeta.status ||
+        getString("paper-panel-placeholder-not-uploaded"),
     },
     structuredSections: [
       {

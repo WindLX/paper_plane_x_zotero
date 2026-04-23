@@ -24,7 +24,9 @@ export async function uploadSingleItem(item: Zotero.Item) {
   const result = await processItemUpload(item);
   if (result.result === "skipped") {
     showPaperNotice(
-      getString("upload-item-skipped-no-pdf", { args: { title: result.title } }),
+      getString("upload-item-skipped-no-pdf", {
+        args: { title: result.title },
+      }),
       "warning",
     );
     return false;
@@ -65,7 +67,9 @@ export async function uploadSelectedItems() {
       if (result.result === "skipped") {
         stats.skipped += 1;
         showPaperNotice(
-          getString("upload-item-skipped-no-pdf", { args: { title: result.title } }),
+          getString("upload-item-skipped-no-pdf", {
+            args: { title: result.title },
+          }),
           "warning",
         );
         continue;
@@ -78,7 +82,8 @@ export async function uploadSelectedItems() {
       );
     } catch (error) {
       stats.failed += 1;
-      const reason = error instanceof Error ? error.message : "Unknown upload error";
+      const reason =
+        error instanceof Error ? error.message : "Unknown upload error";
       showPaperNotice(
         getString("upload-item-failed", { args: { title, reason } }),
         "error",

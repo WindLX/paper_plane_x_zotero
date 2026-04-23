@@ -55,7 +55,9 @@ export function renderEditableStatusField(
   onChange: (value: string) => void,
 ) {
   const modified = (draftValue || originalValue) !== originalValue;
-  const line = el(doc, "div", { className: "ppx-field-row ppx-field-row-editable" });
+  const line = el(doc, "div", {
+    className: "ppx-field-row ppx-field-row-editable",
+  });
   const select = el(doc, "select", {
     className: `ppx-select${modified ? " is-modified" : ""}`,
   }) as HTMLSelectElement;
@@ -66,7 +68,9 @@ export function renderEditableStatusField(
   select.appendChild(emptyOption);
 
   options.forEach((option) => {
-    const optionEl = el(doc, "option", { text: option.label }) as HTMLOptionElement;
+    const optionEl = el(doc, "option", {
+      text: option.label,
+    }) as HTMLOptionElement;
     optionEl.value = option.value;
     optionEl.disabled = Boolean(option.disabled);
     if ((draftValue || originalValue) === option.value) {
@@ -117,7 +121,9 @@ export function createCollapsibleCard(
   title: string,
   open = false,
 ) {
-  const details = el(doc, "details", { className: "ppx-card" }) as HTMLDetailsElement;
+  const details = el(doc, "details", {
+    className: "ppx-card",
+  }) as HTMLDetailsElement;
   details.open = open;
 
   const summary = el(doc, "summary", {
@@ -261,17 +267,20 @@ export function renderMarkdownWithKatex(
         );
         return token;
       })
-      .replace(/(^|[^\\])\$(.+?)\$/g, (_match, prefix: string, expr: string) => {
-        const token = `@@PPX_MATH_${mathTokens.length}@@`;
-        mathTokens.push(
-          katex.renderToString(expr.trim(), {
-            throwOnError: false,
-            displayMode: false,
-            output: "mathml",
-          }),
-        );
-        return `${prefix}${token}`;
-      });
+      .replace(
+        /(^|[^\\])\$(.+?)\$/g,
+        (_match, prefix: string, expr: string) => {
+          const token = `@@PPX_MATH_${mathTokens.length}@@`;
+          mathTokens.push(
+            katex.renderToString(expr.trim(), {
+              throwOnError: false,
+              displayMode: false,
+              output: "mathml",
+            }),
+          );
+          return `${prefix}${token}`;
+        },
+      );
 
     const parsed = marked.parse(processed, {
       gfm: true,

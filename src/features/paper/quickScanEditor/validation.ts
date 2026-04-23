@@ -5,10 +5,7 @@ import {
   QuickScan,
   SynthesisData,
 } from "../../../domain/paper";
-import {
-  QUICK_SCAN_VERDICTS,
-  StructuredJSONValidationResult,
-} from "./types";
+import { QUICK_SCAN_VERDICTS, StructuredJSONValidationResult } from "./types";
 
 const QUICK_SCAN_KEYS = ["verdict", "reason", "quick_summary", "tags"] as const;
 const SYNTHESIS_KEYS = [
@@ -74,7 +71,10 @@ export function createEmptyAnalysisReport(): AnalysisReport {
   return {};
 }
 
-export function stringifyStructuredJSON<T>(value: T | null | undefined, fallback: T) {
+export function stringifyStructuredJSON<T>(
+  value: T | null | undefined,
+  fallback: T,
+) {
   return JSON.stringify(value ?? fallback, null, 2);
 }
 
@@ -166,9 +166,9 @@ function normalizeSynthesisData(value: unknown, path: string): SynthesisData {
         existing_limit:
           "existing_limit" in input
             ? normalizeCitedText(
-              input.existing_limit,
-              `${childPath}.existing_limit`,
-            )
+                input.existing_limit,
+                `${childPath}.existing_limit`,
+              )
             : undefined,
         motivation:
           "motivation" in input
@@ -199,16 +199,16 @@ function normalizeSynthesisData(value: unknown, path: string): SynthesisData {
         disadvantage:
           "disadvantage" in input
             ? normalizeCitedText(
-              input.disadvantage,
-              `${childPath}.disadvantage`,
-            )
+                input.disadvantage,
+                `${childPath}.disadvantage`,
+              )
             : undefined,
         future_direction:
           "future_direction" in input
             ? normalizeCitedText(
-              input.future_direction,
-              `${childPath}.future_direction`,
-            )
+                input.future_direction,
+                `${childPath}.future_direction`,
+              )
             : undefined,
       }),
     );
@@ -264,23 +264,23 @@ function normalizeAnalysisReport(value: unknown, path: string): AnalysisReport {
         concept_name:
           "concept_name" in row
             ? expectString(
-              row.concept_name,
-              `${path}.prerequisites[${index}].concept_name`,
-            )
+                row.concept_name,
+                `${path}.prerequisites[${index}].concept_name`,
+              )
             : undefined,
         brief_explanation:
           "brief_explanation" in row
             ? expectString(
-              row.brief_explanation,
-              `${path}.prerequisites[${index}].brief_explanation`,
-            )
+                row.brief_explanation,
+                `${path}.prerequisites[${index}].brief_explanation`,
+              )
             : undefined,
         relevance_to_paper:
           "relevance_to_paper" in row
             ? normalizeCitedText(
-              row.relevance_to_paper,
-              `${path}.prerequisites[${index}].relevance_to_paper`,
-            )
+                row.relevance_to_paper,
+                `${path}.prerequisites[${index}].relevance_to_paper`,
+              )
             : undefined,
       };
     });
@@ -295,23 +295,23 @@ function normalizeAnalysisReport(value: unknown, path: string): AnalysisReport {
         problem_definition:
           "problem_definition" in input
             ? normalizeCitedText(
-              input.problem_definition,
-              `${childPath}.problem_definition`,
-            )
+                input.problem_definition,
+                `${childPath}.problem_definition`,
+              )
             : undefined,
         objective_function:
           "objective_function" in input
             ? normalizeCitedText(
-              input.objective_function,
-              `${childPath}.objective_function`,
-            )
+                input.objective_function,
+                `${childPath}.objective_function`,
+              )
             : undefined,
         algorithm_flow:
           "algorithm_flow" in input
             ? normalizeCitedText(
-              input.algorithm_flow,
-              `${childPath}.algorithm_flow`,
-            )
+                input.algorithm_flow,
+                `${childPath}.algorithm_flow`,
+              )
             : undefined,
       }),
     );
@@ -331,23 +331,23 @@ function normalizeAnalysisReport(value: unknown, path: string): AnalysisReport {
         step_order:
           "step_order" in row
             ? expectNumber(
-              row.step_order,
-              `${path}.derivation_steps[${index}].step_order`,
-            )
+                row.step_order,
+                `${path}.derivation_steps[${index}].step_order`,
+              )
             : undefined,
         step_name:
           "step_name" in row
             ? expectString(
-              row.step_name,
-              `${path}.derivation_steps[${index}].step_name`,
-            )
+                row.step_name,
+                `${path}.derivation_steps[${index}].step_name`,
+              )
             : undefined,
         detail_explanation:
           "detail_explanation" in row
             ? normalizeCitedText(
-              row.detail_explanation,
-              `${path}.derivation_steps[${index}].detail_explanation`,
-            )
+                row.detail_explanation,
+                `${path}.derivation_steps[${index}].detail_explanation`,
+              )
             : undefined,
       };
     });
@@ -361,8 +361,7 @@ function normalizeCitedText(value: unknown, path: string): CitedText {
   return {
     text: expectString(parsed.text, `${path}.text`),
     citations: expectArray(parsed.citations, `${path}.citations`).map(
-      (item, index) =>
-        normalizeCitation(item, `${path}.citations[${index}]`),
+      (item, index) => normalizeCitation(item, `${path}.citations[${index}]`),
     ),
   };
 }
@@ -410,11 +409,11 @@ function expectObjectWithAllowedKeys(
   path: string,
 ) {
   const parsed = expectObject(value, path);
-  const invalidKey = Object.keys(parsed).find((key) => !allowedKeys.includes(key));
+  const invalidKey = Object.keys(parsed).find(
+    (key) => !allowedKeys.includes(key),
+  );
   if (invalidKey) {
-    throw new Error(
-      `${path} contains unsupported key: ${invalidKey}`,
-    );
+    throw new Error(`${path} contains unsupported key: ${invalidKey}`);
   }
   return parsed;
 }

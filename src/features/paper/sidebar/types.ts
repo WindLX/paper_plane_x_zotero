@@ -1,4 +1,8 @@
-import { PaperDetailResponse, ProjectSummary, QuickScan } from "../../../domain/paper/types";
+import {
+  PaperDetailResponse,
+  ProjectSummary,
+  QuickScan,
+} from "../../../domain/paper/types";
 import { LocalPaperMetadata } from "../../../infra/zotero/paperMetadataRepository";
 
 export type PaperActionStatus =
@@ -60,10 +64,7 @@ export interface PaperSidebarViewModel {
     openQuickScanEditor(): Promise<void>;
     openSynthesisEditor(): Promise<void>;
     openAnalysisEditor(): Promise<void>;
-    updateDraft(
-      key: keyof SidebarDraftState,
-      value: string,
-    ): void;
+    updateDraft(key: keyof SidebarDraftState, value: string): void;
     linkProject(): Promise<void>;
     unlinkProject(projectID: string): Promise<void>;
     copy(text: string, successMessage: string): void;

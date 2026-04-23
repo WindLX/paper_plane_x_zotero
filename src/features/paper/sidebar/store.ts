@@ -21,7 +21,11 @@ import {
   validateSynthesisJSON,
 } from "../quickScanEditor/validation";
 import { uploadSingleItem } from "../upload/useCase";
-import { PaperActionState, PaperSidebarState, SidebarDraftState } from "./types";
+import {
+  PaperActionState,
+  PaperSidebarState,
+  SidebarDraftState,
+} from "./types";
 
 const SYNC_THROTTLE_MS = 3000;
 const lastSyncAtByItemID = new Map<number, number>();
@@ -38,7 +42,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
     item,
     isRegularItem: Boolean(item?.isRegularItem()),
     localMeta:
-      item && item.isRegularItem() ? paperMetadataRepository.read(item) : EMPTY_META,
+      item && item.isRegularItem()
+        ? paperMetadataRepository.read(item)
+        : EMPTY_META,
     remoteDetail: null,
     projects: [],
     projectNames: {},
@@ -91,7 +97,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
     }
 
     const projects = extractAssociatedProjects(state.remoteDetail);
-    const projectNames: Record<string, string | null> = { ...state.projectNames };
+    const projectNames: Record<string, string | null> = {
+      ...state.projectNames,
+    };
     projects.forEach((project) => {
       if (project.name) {
         projectNames[project.project_id] = project.name;
@@ -134,7 +142,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
     });
   };
 
-  const syncAndPersistDetail = async (detail: Awaited<ReturnType<typeof paperApiClient.fetchDetail>>) => {
+  const syncAndPersistDetail = async (
+    detail: Awaited<ReturnType<typeof paperApiClient.fetchDetail>>,
+  ) => {
     if (!state.item) {
       return;
     }
@@ -183,7 +193,8 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
     },
     getSummary() {
       return (
-        state.localMeta.status || getString("paper-panel-placeholder-not-uploaded")
+        state.localMeta.status ||
+        getString("paper-panel-placeholder-not-uploaded")
       );
     },
     updateDraft(key: keyof SidebarDraftState, value: string) {
@@ -208,7 +219,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
           if (!state.item || !state.localMeta.paperID) {
             throw new Error("paper_id is empty");
           }
-          const detail = await paperApiClient.fetchDetail(state.localMeta.paperID);
+          const detail = await paperApiClient.fetchDetail(
+            state.localMeta.paperID,
+          );
           patch({ remoteDetail: detail });
           await resolveProjectNames();
           hydrateDraftFromRemoteDetail();
@@ -261,7 +274,10 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         if (!state.item || !state.localMeta.paperID) {
           throw new Error("paper_id is empty");
         }
-        const submit = await paperApiClient.reprocess(state.item, state.localMeta.paperID);
+        const submit = await paperApiClient.reprocess(
+          state.item,
+          state.localMeta.paperID,
+        );
         await paperMetadataRepository.write(state.item, {
           paperID: submit.paper_id || state.localMeta.paperID,
           status: submit.status,
@@ -281,25 +297,25 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         }
         const statusOverrides = state.remoteDetail
           ? {
-            extraction_status:
-              state.draft.extraction_status &&
+              extraction_status:
+                state.draft.extraction_status &&
                 state.draft.extraction_status !==
-                state.remoteDetail.extraction_status
-                ? state.draft.extraction_status
-                : undefined,
-            extraction_fact_check_status:
-              state.draft.extraction_fact_check_status &&
+                  state.remoteDetail.extraction_status
+                  ? state.draft.extraction_status
+                  : undefined,
+              extraction_fact_check_status:
+                state.draft.extraction_fact_check_status &&
                 state.draft.extraction_fact_check_status !==
-                state.remoteDetail.extraction_fact_check_status
-                ? state.draft.extraction_fact_check_status
-                : undefined,
-            analysis_fact_check_status:
-              state.draft.analysis_fact_check_status &&
+                  state.remoteDetail.extraction_fact_check_status
+                  ? state.draft.extraction_fact_check_status
+                  : undefined,
+              analysis_fact_check_status:
+                state.draft.analysis_fact_check_status &&
                 state.draft.analysis_fact_check_status !==
-                state.remoteDetail.analysis_fact_check_status
-                ? state.draft.analysis_fact_check_status
-                : undefined,
-          }
+                  state.remoteDetail.analysis_fact_check_status
+                  ? state.draft.analysis_fact_check_status
+                  : undefined,
+            }
           : undefined;
         const detail = await paperApiClient.manualUpdate(
           state.item,
@@ -412,7 +428,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
           throw new Error("project_id is empty");
         }
         await paperApiClient.linkProject(projectID, state.localMeta.paperID);
-        const detail = await paperApiClient.fetchDetail(state.localMeta.paperID);
+        const detail = await paperApiClient.fetchDetail(
+          state.localMeta.paperID,
+        );
         patch({
           remoteDetail: detail,
           draft: {
@@ -435,7 +453,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
           throw new Error("paper_id is empty");
         }
         await paperApiClient.unlinkProject(projectID, state.localMeta.paperID);
-        const detail = await paperApiClient.fetchDetail(state.localMeta.paperID);
+        const detail = await paperApiClient.fetchDetail(
+          state.localMeta.paperID,
+        );
         patch({ remoteDetail: detail });
         await resolveProjectNames();
         showPaperNotice(

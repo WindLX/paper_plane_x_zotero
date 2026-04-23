@@ -85,7 +85,10 @@ describe("quickScanEditor validation", function () {
 
   it("accepts an empty synthesis template", function () {
     const result = validateSynthesisJSON(
-      stringifyStructuredJSON(createEmptySynthesisData(), createEmptySynthesisData()),
+      stringifyStructuredJSON(
+        createEmptySynthesisData(),
+        createEmptySynthesisData(),
+      ),
     );
 
     assert.isTrue(result.ok);
@@ -110,7 +113,10 @@ describe("quickScanEditor validation", function () {
 
   it("accepts an empty analysis template", function () {
     const result = validateAnalysisJSON(
-      stringifyStructuredJSON(createEmptyAnalysisReport(), createEmptyAnalysisReport()),
+      stringifyStructuredJSON(
+        createEmptyAnalysisReport(),
+        createEmptyAnalysisReport(),
+      ),
     );
 
     assert.isTrue(result.ok);
