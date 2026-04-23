@@ -166,4 +166,30 @@ describe("paper domain mappers", function () {
       tags: ["new-tag", "agent"],
     });
   });
+
+  it("preserves edited quick scan tags when item tag sync is disabled", function () {
+    const item = createMockItem({
+      tags: ["ppx:transformer", "ppx:nlp"],
+    });
+
+    const result = extractManualUpdatePayload(
+      item,
+      {
+        verdict: "推荐精读",
+        reason: "manual fix",
+        quick_summary: "updated in editor",
+        tags: ["manual-tag", "custom-topic"],
+      },
+      undefined,
+      undefined,
+      { syncQuickScanTagsFromItem: false },
+    );
+
+    assert.deepEqual(result.quick_scan, {
+      verdict: "推荐精读",
+      reason: "manual fix",
+      quick_summary: "updated in editor",
+      tags: ["manual-tag", "custom-topic"],
+    });
+  });
 });

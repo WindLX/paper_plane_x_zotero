@@ -349,6 +349,9 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
             state.localMeta.paperID,
             undefined,
             quickScan,
+            undefined,
+            undefined,
+            { syncQuickScanTagsFromItem: false },
           );
           patch({ remoteDetail: detail });
           await resolveProjectNames();

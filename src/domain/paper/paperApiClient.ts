@@ -32,6 +32,9 @@ export interface PaperApiClient {
     quickScan?: QuickScan | null,
     synthesisData?: SynthesisData | null,
     analysisReport?: AnalysisReport | null,
+    options?: {
+      syncQuickScanTagsFromItem?: boolean;
+    },
   ): Promise<PaperDetailResponse>;
   reprocess(item: Zotero.Item, paperID: string): Promise<UploadResponse>;
   fetchProjectDetail(projectID: string): Promise<ProjectResponse>;
@@ -90,6 +93,7 @@ export function createPaperApiClient(): PaperApiClient {
       quickScan,
       synthesisData,
       analysisReport,
+      options,
     ) {
       const baseURL = getPaperServiceBaseURL();
       if (!baseURL) {
@@ -102,6 +106,7 @@ export function createPaperApiClient(): PaperApiClient {
         quickScan,
         synthesisData,
         analysisReport,
+        options,
       );
       if (statusOverrides?.extraction_status) {
         payload.extraction_status = statusOverrides.extraction_status;

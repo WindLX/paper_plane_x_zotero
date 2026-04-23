@@ -104,6 +104,9 @@ export function extractManualUpdatePayload(
   quickScan?: QuickScan | null,
   synthesisData?: SynthesisData | null,
   analysisReport?: AnalysisReport | null,
+  options?: {
+    syncQuickScanTagsFromItem?: boolean;
+  },
 ) {
   const payload = extractUploadPayload(item);
   const year = payload.year ? Number.parseInt(payload.year, 10) : null;
@@ -120,11 +123,10 @@ export function extractManualUpdatePayload(
     doi: payload.doi || null,
     custom_meta: payload.customMeta || null,
   };
-    nextPayload.quick_scan = mergeQuickScanTags(
-      quickScan,
-      extractPaperPlaneTags(item),
-    );
-  }
+  nextPayload.quick_scan =
+    options?.syncQuickScanTagsFromItem === false
+      ? (quickScan ?? null)
+      : mergeQuickScanTags(quickScan, extractPaperPlaneTags(item));
   if (synthesisData !== undefined) {
     nextPayload.synthesis_data = synthesisData;
   }
