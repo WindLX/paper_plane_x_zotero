@@ -42,6 +42,17 @@
   color: inherit;
 }
 
+.ppx-sidebar-root button,
+.ppx-sidebar-root input,
+.ppx-sidebar-root select,
+.ppx-sidebar-root summary {
+  font: inherit;
+}
+
+.ppx-sidebar-root button {
+  font-weight: 400;
+}
+
 .ppx-panel {
   display: grid;
   gap: 10px;
@@ -67,7 +78,7 @@
 .ppx-field-label {
   display: flex;
   align-items: center;
-  font-weight: 600;
+  font-weight: 400;
   color: color-mix(in srgb, currentColor 78%, transparent);
   font-size: 14px;
   letter-spacing: 0.01em;
@@ -79,6 +90,9 @@
 .ppx-copy-button,
 .ppx-markdown,
 .ppx-quote-button {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   word-break: break-word;
   user-select: text;
   -moz-user-select: text;
@@ -237,6 +251,7 @@
   background: var(--ppx-surface-muted);
   color: inherit;
   cursor: pointer;
+  font-weight: 400;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
@@ -346,6 +361,7 @@
 .ppx-citation-item {
   display: grid;
   gap: 4px;
+  min-width: 0;
 }
 
 .ppx-inline-label,
@@ -387,6 +403,10 @@
 .ppx-paragraph {
   margin: 0;
   line-height: 1.55;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .ppx-markdown .katex,
@@ -404,6 +424,9 @@
 }
 
 .ppx-citation-item {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 8px 10px;
   border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
   border-radius: var(--ppx-radius-sm);
@@ -412,7 +435,11 @@
 
 .ppx-quote-button {
   display: block;
+  min-width: 0;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   padding: 2px 0 0;
   border: none;
   border-radius: 0;
