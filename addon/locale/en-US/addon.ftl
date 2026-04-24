@@ -1,6 +1,5 @@
 prefs-title = Paper Plane X
 paper-list-column-status = PPX Extraction Status
-menuitem-upload-paper = Upload to Paper Plane X
 upload-start = Uploading selected papers
 upload-finish = Upload finished: success { $success }, failed { $failed }, skipped { $skipped }
 upload-no-selection = No regular library items selected

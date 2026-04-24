@@ -1,6 +1,5 @@
 prefs-title = Paper Plane X
 paper-list-column-status = PPX 提取状态
-menuitem-upload-paper = 上传到 Paper Plane X
 upload-start = 开始上传选中文献
 upload-finish = 上传完成: 成功 { $success }，失败 { $failed }，跳过 { $skipped }
 upload-no-selection = 未选中可上传的文献条目

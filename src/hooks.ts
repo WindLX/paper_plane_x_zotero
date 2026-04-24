@@ -17,7 +17,6 @@ async function onStartup() {
   initLocale();
 
   registerPreferencesPane();
-  registerPaperSidebarSection();
   registerPaperListColumns();
 
   await Promise.all(
@@ -37,6 +36,7 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   );
 
   registerMainWindowStyle(win);
+  registerPaperSidebarSection();
   registerPaperUploadMenuItem();
 }
 
