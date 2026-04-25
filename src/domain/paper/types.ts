@@ -61,6 +61,10 @@ export interface AnalysisReport {
     step_name?: string;
     detail_explanation?: CitedText;
   }>;
+  related_references?: Array<{
+    title?: string;
+    reason?: string;
+  }>;
 }
 
 export interface PaperDetailResponse {

@@ -192,4 +192,26 @@ describe("paper domain mappers", function () {
       tags: ["manual-tag", "custom-topic"],
     });
   });
+
+  it("preserves analysis related_references in manual update payload", function () {
+    const item = createMockItem();
+
+    const result = extractManualUpdatePayload(item, undefined, undefined, {
+      related_references: [
+        {
+          title: "Reference A",
+          reason: "important theoretical precursor",
+        },
+      ],
+    });
+
+    assert.deepEqual(result.analysis_report, {
+      related_references: [
+        {
+          title: "Reference A",
+          reason: "important theoretical precursor",
+        },
+      ],
+    });
+  });
 });

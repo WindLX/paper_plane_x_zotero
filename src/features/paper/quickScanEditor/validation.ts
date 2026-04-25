@@ -35,6 +35,7 @@ const ANALYSIS_KEYS = [
   "prerequisites",
   "core_formulation",
   "derivation_steps",
+  "related_references",
 ] as const;
 const ANALYSIS_PREREQUISITE_KEYS = [
   "concept_name",
@@ -51,6 +52,7 @@ const ANALYSIS_DERIVATION_STEP_KEYS = [
   "step_name",
   "detail_explanation",
 ] as const;
+const ANALYSIS_RELATED_REFERENCE_KEYS = ["title", "reason"] as const;
 const CITED_TEXT_KEYS = ["text", "citations"] as const;
 const CITATION_KEYS = ["quote", "source_header"] as const;
 
@@ -347,6 +349,35 @@ function normalizeAnalysisReport(value: unknown, path: string): AnalysisReport {
             ? normalizeCitedText(
                 row.detail_explanation,
                 `${path}.derivation_steps[${index}].detail_explanation`,
+              )
+            : undefined,
+      };
+    });
+  }
+
+  if ("related_references" in parsed) {
+    normalized.related_references = expectArray(
+      parsed.related_references,
+      `${path}.related_references`,
+    ).map((item, index) => {
+      const row = expectObjectWithAllowedKeys(
+        item,
+        ANALYSIS_RELATED_REFERENCE_KEYS,
+        `${path}.related_references[${index}]`,
+      );
+      return {
+        title:
+          "title" in row
+            ? expectString(
+                row.title,
+                `${path}.related_references[${index}].title`,
+              )
+            : undefined,
+        reason:
+          "reason" in row
+            ? expectString(
+                row.reason,
+                `${path}.related_references[${index}].reason`,
               )
             : undefined,
       };

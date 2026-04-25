@@ -305,10 +305,45 @@ export function createAnalysisSection(
     });
   }
 
+  const relatedReferences = createCollapsibleCard(
+    doc,
+    getString("paper-panel-section-related-references"),
+    false,
+  );
+  if (!report.related_references?.length) {
+    relatedReferences.content.appendChild(
+      createInlineField(doc, getString("paper-panel-label-items"), "-"),
+    );
+  } else {
+    report.related_references.forEach((reference, idx) => {
+      const title =
+        reference.title?.trim() || getString("paper-panel-label-untitled");
+      const card = createCollapsibleCard(
+        doc,
+        `${getString("paper-panel-label-reference")} ${idx + 1}: ${title}`,
+        false,
+      );
+      card.content.append(
+        createInlineField(
+          doc,
+          getString("paper-panel-label-title"),
+          reference.title || "-",
+        ),
+        createParagraphField(
+          doc,
+          getString("paper-panel-label-reason"),
+          reference.reason || "-",
+        ),
+      );
+      relatedReferences.content.appendChild(card.root);
+    });
+  }
+
   section.content.append(
     prerequisites.root,
     coreFormulation.root,
     derivation.root,
+    relatedReferences.root,
   );
   return section.root;
 }

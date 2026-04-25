@@ -146,4 +146,46 @@ describe("quickScanEditor validation", function () {
       assert.include(result.error, "step_order");
     }
   });
+
+  it("accepts analysis related_references", function () {
+    const result = validateAnalysisJSON(
+      JSON.stringify({
+        related_references: [
+          {
+            title: "Reference A",
+            reason: "foundational baseline",
+          },
+        ],
+      }),
+    );
+
+    assert.isTrue(result.ok);
+    if (result.ok) {
+      assert.deepEqual(result.value.related_references, [
+        {
+          title: "Reference A",
+          reason: "foundational baseline",
+        },
+      ]);
+    }
+  });
+
+  it("rejects unsupported related_references item keys", function () {
+    const result = validateAnalysisJSON(
+      JSON.stringify({
+        related_references: [
+          {
+            title: "Reference A",
+            reason: "foundational baseline",
+            extra: true,
+          },
+        ],
+      }),
+    );
+
+    assert.isFalse(result.ok);
+    if (!result.ok) {
+      assert.include(result.error, "unsupported key");
+    }
+  });
 });
