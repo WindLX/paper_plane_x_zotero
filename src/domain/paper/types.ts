@@ -104,6 +104,7 @@ export interface ProjectResponse {
   project_id: string;
   name: string;
   description: string | null;
+  agent_summary: string | null;
   created_at: string;
   updated_at: string;
 }
