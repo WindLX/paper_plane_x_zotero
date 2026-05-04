@@ -4,3 +4,17 @@ item-section-paper-plane-sidenav-tooltip =
     .tooltiptext = Paper Plane X 论文状态
 menuitem-upload-paper =
     .label = 上传到 Paper Plane X
+menuitem-link-paper =
+    .label = 关联到 Paper Plane X 项目
+
+link-base-url-missing = 未配置 Paper Plane X 服务地址，请在首选项中设置。
+link-no-selection = 请先选择要关联的文献。
+link-no-paper-id = 选中的文献尚未上传到 Paper Plane X，无法关联。
+link-fetch-projects-failed = 获取项目列表失败。
+link-no-projects = 当前没有可用的项目。
+link-select-project-title = 选择项目
+link-select-project-prompt = 请选择要关联到的项目：
+link-start = 正在关联到「{ $projectName }」...
+link-item-failed = 关联「{ $title }」失败：{ $reason }
+link-item-skipped-no-paper-id = 跳过「{ $title }」：尚未上传
+link-finish = 关联完成：成功 { $success }，失败 { $failed }，跳过 { $skipped }

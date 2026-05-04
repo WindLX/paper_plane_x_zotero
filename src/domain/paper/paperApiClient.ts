@@ -10,6 +10,7 @@ import {
   MessageResponse,
   PaperDetailResponse,
   PaperStatusOverrides,
+  ProjectListResponse,
   ProjectResponse,
   QuickScan,
   SynthesisData,
@@ -38,6 +39,7 @@ export interface PaperApiClient {
   ): Promise<PaperDetailResponse>;
   reprocess(item: Zotero.Item, paperID: string): Promise<UploadResponse>;
   fetchProjectDetail(projectID: string): Promise<ProjectResponse>;
+  listProjects(): Promise<ProjectListResponse>;
   linkProject(projectID: string, paperID: string): Promise<MessageResponse>;
   unlinkProject(projectID: string, paperID: string): Promise<MessageResponse>;
 }
@@ -181,6 +183,24 @@ export function createPaperApiClient(): PaperApiClient {
 
       return parseJSONResponse<ProjectResponse>(response);
     },
+    async listProjects() {
+      const baseURL = getPaperServiceBaseURL();
+      if (!baseURL) {
+        throw new Error("paper service base URL is empty");
+      }
+
+      const response = await fetch(
+        `${baseURL}/api/v1/projects?offset=0&limit=100`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
+
+      return parseJSONResponse<ProjectListResponse>(response);
+    },
     async linkProject(projectID, paperID) {
       const baseURL = getPaperServiceBaseURL();
       if (!baseURL) {
@@ -301,8 +321,8 @@ function buildMultipartBody(
     chunks.push(
       encoder.encode(
         `--${boundary}\r\n` +
-          `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
-          `${value}\r\n`,
+        `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
+        `${value}\r\n`,
       ),
     );
   };
@@ -310,8 +330,8 @@ function buildMultipartBody(
   chunks.push(
     encoder.encode(
       `--${boundary}\r\n` +
-        `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
-        "Content-Type: application/pdf\r\n\r\n",
+      `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
+      "Content-Type: application/pdf\r\n\r\n",
     ),
   );
   chunks.push(pdfBytes);

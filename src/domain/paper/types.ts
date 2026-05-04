@@ -107,6 +107,14 @@ export interface ProjectResponse {
   agent_summary: string | null;
   created_at: string;
   updated_at: string;
+  conversation_count: number;
+}
+
+export interface ProjectListResponse {
+  items: ProjectResponse[];
+  total: number;
+  offset: number;
+  limit: number;
 }
 
 export interface MessageResponse {
