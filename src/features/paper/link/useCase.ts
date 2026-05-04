@@ -45,7 +45,7 @@ export async function linkSelectedItemsToProject() {
     }
 
     // 获取项目列表
-    let projects: Array<{ project_id: string; name: string }> = [];
+    let projects: Array<{ project_id: string; name: string }>;
     try {
         const data = await paperApiClient.listProjects();
         projects = data.items || [];
@@ -60,17 +60,27 @@ export async function linkSelectedItemsToProject() {
     }
 
     // 让用户选择项目
-    const projectNames = projects.map((p) => p.name || p.project_id);
+    const projectNames = projects.map((p) => String(p.name || p.project_id));
     const selectedIndex = { value: 0 };
-    const Services = ztoolkit.getGlobal("Services");
-    const selected = Services.prompt.select(
-        null,
-        getString("link-select-project-title"),
-        getString("link-select-project-prompt"),
-        projectNames.length,
-        projectNames,
-        selectedIndex,
-    );
+    let selected: boolean;
+    try {
+        const Services = ztoolkit.getGlobal("Services");
+        const win = Zotero.getMainWindow?.() || null;
+        selected = Services.prompt.select(
+            win,
+            getString("link-select-project-title"),
+            getString("link-select-project-prompt"),
+            projectNames,
+            selectedIndex,
+        );
+    } catch (err) {
+        ztoolkit.log("Project select dialog error", err);
+        showPaperNotice(
+            `Failed to open project selection dialog: ${err instanceof Error ? err.message : String(err)}`,
+            "error",
+        );
+        return;
+    }
 
     if (!selected) {
         return;
