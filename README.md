@@ -66,3 +66,8 @@ src/
 - README 不再保留模板仓库的大段样例说明
 - 以当前后端 API 和当前插件功能为主
 - 新功能优先更新这里的使用说明，而不是依赖模板文档
+
+## TODO
+
+paperplanex-list i18n key
+sidebar link to project 选择

@@ -4,7 +4,7 @@ import {
   CitedText,
   QuickScan,
   SynthesisData,
-} from "../../../domain/paper";
+} from "@/domain/paper";
 import { QUICK_SCAN_VERDICTS, StructuredJSONValidationResult } from "./types";
 
 const QUICK_SCAN_KEYS = ["verdict", "reason", "quick_summary", "tags"] as const;

@@ -1,4 +1,4 @@
-import { getPref } from "../../utils/prefs";
+import { getPref } from "@/utils/prefs";
 import {
   buildPaperDetailStatusMessage,
   extractManualUpdatePayload,
@@ -321,8 +321,8 @@ function buildMultipartBody(
     chunks.push(
       encoder.encode(
         `--${boundary}\r\n` +
-        `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
-        `${value}\r\n`,
+          `Content-Disposition: form-data; name="${name}"\r\n\r\n` +
+          `${value}\r\n`,
       ),
     );
   };
@@ -330,8 +330,8 @@ function buildMultipartBody(
   chunks.push(
     encoder.encode(
       `--${boundary}\r\n` +
-      `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
-      "Content-Type: application/pdf\r\n\r\n",
+        `Content-Disposition: form-data; name="pdf_file"; filename="${escapeHeaderValue(pdfName)}"\r\n` +
+        "Content-Type: application/pdf\r\n\r\n",
     ),
   );
   chunks.push(pdfBytes);

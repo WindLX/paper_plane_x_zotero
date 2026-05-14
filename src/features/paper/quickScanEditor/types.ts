@@ -1,8 +1,4 @@
-import {
-  AnalysisReport,
-  QuickScan,
-  SynthesisData,
-} from "../../../domain/paper";
+import { AnalysisReport, QuickScan, SynthesisData } from "@/domain/paper";
 
 export const QUICK_SCAN_VERDICTS = [
   "推荐精读",

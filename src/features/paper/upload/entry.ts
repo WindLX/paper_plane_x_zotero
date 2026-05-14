@@ -1,4 +1,4 @@
-import { getLocaleID } from "../../../utils/locale";
+import { getLocaleID } from "@/utils/locale";
 import { uploadSelectedItems } from "./useCase";
 
 const ITEM_MENU_ID = "zotero-itemmenu-paper-plane-x-upload";

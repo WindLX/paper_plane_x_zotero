@@ -1,6 +1,6 @@
 import { CheckCheck, Save, Wand2, X } from "lucide";
-import { createLucideIcon } from "../../../shared/ui/icon/lucide";
-import { getString } from "../../../utils/locale";
+import { createLucideIcon } from "@/shared/ui/icon/lucide";
+import { getString } from "@/utils/locale";
 import { StructuredJSONEditorOptions, StructuredEditorValue } from "./types";
 import { stringifyStructuredJSON } from "./validation";
 

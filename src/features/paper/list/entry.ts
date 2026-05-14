@@ -1,5 +1,5 @@
-import { paperMetadataRepository } from "../../../infra/zotero/paperMetadataRepository";
-import { getString } from "../../../utils/locale";
+import { paperMetadataRepository } from "@/infra/zotero/paperMetadataRepository";
+import { getString } from "@/utils/locale";
 
 let statusColumnRegistered = false;
 

@@ -1,7 +1,7 @@
 import { Link, RefreshCw, RotateCw, Save, Unlink, Upload } from "lucide";
-import { ProjectSummary } from "../../../../domain/paper";
-import { el } from "../../../../shared/ui/dom";
-import { getString } from "../../../../utils/locale";
+import { ProjectSummary } from "@/domain/paper";
+import { el } from "@/shared/ui/dom";
+import { getString } from "@/utils/locale";
 import { PaperSidebarViewModel } from "../types";
 import {
   createButton,

@@ -1,4 +1,4 @@
-import { QuickScan } from "../../domain/paper/types";
+import { QuickScan } from "@/domain/paper/types";
 
 const TAG_PREFIX = "ppx:";
 const VERDICT_TAG_PREFIX = "ppx-verdict:";

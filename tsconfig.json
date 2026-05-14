@@ -1,5 +1,10 @@
 {
   "extends": "zotero-types/entries/mainWindow/",
   "include": ["src", "typings"],
-  "exclude": ["build", "addon", "src/legacy"]
+  "exclude": ["build", "addon"],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
 }

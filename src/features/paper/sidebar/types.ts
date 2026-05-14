@@ -2,8 +2,8 @@ import {
   PaperDetailResponse,
   ProjectSummary,
   QuickScan,
-} from "../../../domain/paper/types";
-import { LocalPaperMetadata } from "../../../infra/zotero/paperMetadataRepository";
+} from "@/domain/paper/types";
+import { LocalPaperMetadata } from "@/infra/zotero/paperMetadataRepository";
 
 export type PaperActionStatus =
   | "idle"

@@ -1,9 +1,9 @@
 import katex from "katex";
 import { marked } from "marked";
-import { createLucideIcon } from "../../../../shared/ui/icon/lucide";
-import { el } from "../../../../shared/ui/dom";
-import { getString } from "../../../../utils/locale";
-import { CitedText } from "../../../../domain/paper";
+import { createLucideIcon } from "@/shared/ui/icon/lucide";
+import { el } from "@/shared/ui/dom";
+import { getString } from "@/utils/locale";
+import { CitedText } from "@/domain/paper";
 
 type LucideIconNode = [string, Record<string, unknown>][];
 

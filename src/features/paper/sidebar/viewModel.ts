@@ -1,4 +1,4 @@
-import { getString } from "../../../utils/locale";
+import { getString } from "@/utils/locale";
 import { PaperSidebarViewModel } from "./types";
 
 export function createPaperSidebarViewModel(

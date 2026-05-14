@@ -1,8 +1,8 @@
 import { FilePenLine } from "lucide";
-import { PaperDetailResponse, QuickScan } from "../../../../domain/paper";
-import { createLucideIcon } from "../../../../shared/ui/icon/lucide";
-import { el } from "../../../../shared/ui/dom";
-import { getString } from "../../../../utils/locale";
+import { PaperDetailResponse, QuickScan } from "@/domain/paper";
+import { createLucideIcon } from "@/shared/ui/icon/lucide";
+import { el } from "@/shared/ui/dom";
+import { getString } from "@/utils/locale";
 import { PaperSidebarViewModel } from "../types";
 import {
   appendCitedField,

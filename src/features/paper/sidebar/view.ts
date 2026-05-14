@@ -1,5 +1,5 @@
-import { el } from "../../../shared/ui/dom";
-import { getString } from "../../../utils/locale";
+import { el } from "@/shared/ui/dom";
+import { getString } from "@/utils/locale";
 import {
   renderActionBar,
   renderProjectAssociationPanel,

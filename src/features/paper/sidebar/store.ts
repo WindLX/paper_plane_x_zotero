@@ -2,15 +2,15 @@ import {
   buildPaperDetailStatusMessage,
   createPaperApiClient,
   extractAssociatedProjects,
-} from "../../../domain/paper";
-import { copyText } from "../../../infra/zotero/clipboard";
+} from "@/domain/paper";
+import { copyText } from "@/infra/zotero/clipboard";
 import {
   LocalPaperMetadata,
   paperMetadataRepository,
-} from "../../../infra/zotero/paperMetadataRepository";
-import { showPaperNotice } from "../../../infra/zotero/paperNotificationService";
-import { syncQuickScanTagsToItem } from "../../../infra/zotero/paperTagSync";
-import { getString } from "../../../utils/locale";
+} from "@/infra/zotero/paperMetadataRepository";
+import { showPaperNotice } from "@/infra/zotero/paperNotificationService";
+import { syncQuickScanTagsToItem } from "@/infra/zotero/paperTagSync";
+import { getString } from "@/utils/locale";
 import { openStructuredJSONEditorDialog } from "../quickScanEditor/dialog";
 import {
   createEmptyAnalysisReport,

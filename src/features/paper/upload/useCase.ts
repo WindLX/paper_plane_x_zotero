@@ -1,10 +1,10 @@
-import { createPaperApiClient } from "../../../domain/paper/paperApiClient";
-import { paperMetadataRepository } from "../../../infra/zotero/paperMetadataRepository";
+import { createPaperApiClient } from "@/domain/paper/paperApiClient";
+import { paperMetadataRepository } from "@/infra/zotero/paperMetadataRepository";
 import {
   createPaperProgress,
   showPaperNotice,
-} from "../../../infra/zotero/paperNotificationService";
-import { getString } from "../../../utils/locale";
+} from "@/infra/zotero/paperNotificationService";
+import { getString } from "@/utils/locale";
 
 interface UploadStats {
   success: number;

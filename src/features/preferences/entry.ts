@@ -1,4 +1,4 @@
-import { getString } from "../../utils/locale";
+import { getString } from "@/utils/locale";
 
 export function registerPreferencesPane() {
   Zotero.PreferencePanes.register({

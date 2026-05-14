@@ -1,4 +1,4 @@
-import { getLocaleID } from "../../../utils/locale";
+import { getLocaleID } from "@/utils/locale";
 import { mountPaperSidebar } from "./controller";
 
 const PANE_ID = "paper-plane-x";
