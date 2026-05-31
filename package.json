@@ -30,9 +30,9 @@
     "update-deps": "npm update --save"
   },
   "dependencies": {
-    "katex": "^0.16.45",
-    "lucide": "^1.8.0",
-    "marked": "^18.0.2",
+    "katex": "^0.17.0",
+    "lucide": "^1.17.0",
+    "marked": "^18.0.4",
     "zotero-plugin-toolkit": "^5.1.0-beta.13"
   },
   "devDependencies": {
@@ -41,8 +41,8 @@
     "@types/node": "^24.10.0",
     "@zotero-plugin/eslint-config": "^0.6.7",
     "chai": "^6.2.1",
-    "eslint": "^10.2.1",
-    "mocha": "^11.7.5",
+    "eslint": "^10.4.1",
+    "mocha": "^11.7.6",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "zotero-plugin-scaffold": "^0.8.2",
