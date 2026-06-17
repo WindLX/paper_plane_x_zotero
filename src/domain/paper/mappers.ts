@@ -18,6 +18,11 @@ export interface PaperUploadPayload {
 const PAPER_PLANE_TAG_PREFIX = "ppx:";
 const PAPER_PLANE_VERDICT_TAG_PREFIX = "ppx-verdict:";
 
+interface CustomMeta {
+  zotero_key: string;
+  citation_key?: string;
+}
+
 export function extractAssociatedProjects(
   detail: PaperDetailResponse,
 ): ProjectSummary[] {
@@ -88,6 +93,11 @@ export function extractUploadPayload(item: Zotero.Item): PaperUploadPayload {
 
   const publication = getPublication(item);
   const doi = getDOI(item);
+  const customMeta: CustomMeta = { zotero_key: item.key };
+  const citationKey = getCitationKey(item);
+  if (citationKey) {
+    customMeta.citation_key = citationKey;
+  }
 
   return {
     title,
@@ -95,7 +105,7 @@ export function extractUploadPayload(item: Zotero.Item): PaperUploadPayload {
     year,
     publication,
     doi,
-    customMeta: JSON.stringify({ zotero_key: item.key }),
+    customMeta: JSON.stringify(customMeta),
   };
 }
 
@@ -114,9 +124,9 @@ export function extractManualUpdatePayload(
     title: payload.title || null,
     authors: payload.authors
       ? payload.authors
-          .split(",")
-          .map((author) => author.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((author) => author.trim())
+        .filter(Boolean)
       : [],
     year: Number.isFinite(year || NaN) ? year : null,
     publication: payload.publication || null,
@@ -196,6 +206,14 @@ function getPublication(item: Zotero.Item) {
 function getDOI(item: Zotero.Item) {
   try {
     return item.getField("DOI") || "";
+  } catch (_error) {
+    return "";
+  }
+}
+
+function getCitationKey(item: Zotero.Item): string {
+  try {
+    return item.getField("citationKey")?.trim() || "";
   } catch (_error) {
     return "";
   }

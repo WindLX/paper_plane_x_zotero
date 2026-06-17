@@ -5,6 +5,7 @@ import {
   buildPaperDetailStatusMessage,
   extractAssociatedProjects,
   extractManualUpdatePayload,
+  extractUploadPayload,
   extractPaperPlaneTags,
   mergeQuickScanTags,
 } from "../src/domain/paper";
@@ -17,6 +18,7 @@ function createMockItem(overrides?: {
   proceedingsTitle?: string;
   doi?: string;
   key?: string;
+  citationKey?: string;
   tags?: string[];
 }) {
   const values = {
@@ -27,6 +29,7 @@ function createMockItem(overrides?: {
     proceedingsTitle: overrides?.proceedingsTitle || "",
     doi: overrides?.doi || "",
     key: overrides?.key || "ITEM-1",
+    citationKey: overrides?.citationKey || "",
     tags: overrides?.tags || [],
   };
 
@@ -47,6 +50,8 @@ function createMockItem(overrides?: {
           return values.proceedingsTitle;
         case "DOI":
           return values.doi;
+        case "citationKey":
+          return values.citationKey;
         default:
           return "";
       }
@@ -146,6 +151,44 @@ describe("paper domain mappers", function () {
     assert.equal(result.publication, "NeurIPS");
     assert.equal(result.year, 2017);
     assert.equal(result.custom_meta, '{"zotero_key":"ABCD1234"}');
+  });
+
+  it("includes Zotero citationKey in upload custom meta", function () {
+    const item = createMockItem({
+      key: "ABCD1234",
+      citationKey: "Vaswani2017",
+    });
+
+    const result = extractUploadPayload(item);
+
+    assert.equal(
+      result.customMeta,
+      '{"zotero_key":"ABCD1234","citation_key":"Vaswani2017"}',
+    );
+  });
+
+  it("omits citation key from custom meta when no valid key exists", function () {
+    const item = createMockItem({
+      key: "ABCD1234",
+    });
+
+    const result = extractUploadPayload(item);
+
+    assert.equal(result.customMeta, '{"zotero_key":"ABCD1234"}');
+  });
+
+  it("includes citation key in manual update custom meta", function () {
+    const item = createMockItem({
+      key: "ABCD1234",
+      citationKey: "Manual2026",
+    });
+
+    const result = extractManualUpdatePayload(item);
+
+    assert.equal(
+      result.custom_meta,
+      '{"zotero_key":"ABCD1234","citation_key":"Manual2026"}',
+    );
   });
 
   it("preserves existing quick scan content while replacing tags", function () {
