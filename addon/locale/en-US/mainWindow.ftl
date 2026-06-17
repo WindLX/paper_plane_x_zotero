@@ -6,15 +6,3 @@ menuitem-upload-paper =
     .label = Upload to Paper Plane X
 menuitem-link-paper =
     .label = Link to Paper Plane X Project
-
-link-base-url-missing = Paper Plane X service URL is not configured. Please set it in preferences.
-link-no-selection = Please select items to link.
-link-no-paper-id = Selected items have not been uploaded to Paper Plane X yet.
-link-fetch-projects-failed = Failed to fetch project list.
-link-no-projects = No projects available.
-link-select-project-title = Select Project
-link-select-project-prompt = Please select a project to link to:
-link-start = Linking to "{ $projectName }"...
-link-item-failed = Link "{ $title }" failed: { $reason }
-link-item-skipped-no-paper-id = Skipped "{ $title }": not uploaded yet
-link-finish = Link complete: { $success } succeeded, { $failed } failed, { $skipped } skipped
