@@ -210,7 +210,7 @@ export function appendCitedField(
     return;
   }
 
-  const field = createCollapsibleCard(doc, label, false);
+  const field = createCollapsibleCard(doc, label, true);
   field.content.appendChild(
     createParagraphField(
       doc,

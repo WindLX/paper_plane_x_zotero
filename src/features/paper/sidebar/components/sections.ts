@@ -72,7 +72,7 @@ export function createSynthesisSection(
   const section = createCollapsibleCard(
     doc,
     getString("paper-panel-synthesis-data-label"),
-    false,
+    true,
   );
   section.root.classList.add("ppx-panel", "ppx-panel-section");
   attachJSONEditAction(doc, section.root, !vm.data.remoteDetail, async () => {
@@ -92,7 +92,7 @@ export function createSynthesisSection(
   const gap = createCollapsibleCard(
     doc,
     getString("paper-panel-section-research-gap"),
-    false,
+    true,
   );
   appendCitedField(
     gap.content,
@@ -116,7 +116,7 @@ export function createSynthesisSection(
   const method = createCollapsibleCard(
     doc,
     getString("paper-panel-section-methodology"),
-    false,
+    true,
   );
   method.content.appendChild(
     createInlineField(
@@ -153,7 +153,7 @@ export function createSynthesisSection(
   const results = createCollapsibleCard(
     doc,
     getString("paper-panel-section-key-results"),
-    false,
+    true,
   );
   appendCitedField(
     results.content,
@@ -177,7 +177,7 @@ export function createSynthesisSection(
   const review = createCollapsibleCard(
     doc,
     getString("paper-panel-section-review-summary"),
-    false,
+    true,
   );
   appendCitedField(
     review.content,
@@ -198,7 +198,7 @@ export function createAnalysisSection(
   const section = createCollapsibleCard(
     doc,
     getString("paper-panel-analysis-report-label"),
-    false,
+    true,
   );
   section.root.classList.add("ppx-panel", "ppx-panel-section");
   attachJSONEditAction(doc, section.root, !vm.data.remoteDetail, async () => {
@@ -218,7 +218,7 @@ export function createAnalysisSection(
   const prerequisites = createCollapsibleCard(
     doc,
     getString("paper-panel-section-prerequisites"),
-    false,
+    true,
   );
   if (!report.prerequisites?.length) {
     prerequisites.content.appendChild(
@@ -231,7 +231,7 @@ export function createAnalysisSection(
       const card = createCollapsibleCard(
         doc,
         `${getString("paper-panel-label-concept")} ${idx + 1}: ${conceptTitle}`,
-        false,
+        true,
       );
       card.content.append(
         createInlineField(
@@ -258,7 +258,7 @@ export function createAnalysisSection(
   const coreFormulation = createCollapsibleCard(
     doc,
     getString("paper-panel-section-core-formulation"),
-    false,
+    true,
   );
   appendCitedField(
     coreFormulation.content,
@@ -282,7 +282,7 @@ export function createAnalysisSection(
   const derivation = createCollapsibleCard(
     doc,
     getString("paper-panel-section-derivation-steps"),
-    false,
+    true,
   );
   if (!report.derivation_steps?.length) {
     derivation.content.appendChild(
@@ -293,7 +293,7 @@ export function createAnalysisSection(
       const stepCard = createCollapsibleCard(
         doc,
         `${getString("paper-panel-label-step")} ${step.step_order || "?"}: ${step.step_name || getString("paper-panel-label-untitled")}`,
-        false,
+        true,
       );
       appendCitedField(
         stepCard.content,
@@ -308,7 +308,7 @@ export function createAnalysisSection(
   const relatedReferences = createCollapsibleCard(
     doc,
     getString("paper-panel-section-related-references"),
-    false,
+    true,
   );
   if (!report.related_references?.length) {
     relatedReferences.content.appendChild(
@@ -321,7 +321,7 @@ export function createAnalysisSection(
       const card = createCollapsibleCard(
         doc,
         `${getString("paper-panel-label-reference")} ${idx + 1}: ${title}`,
-        false,
+        true,
       );
       card.content.append(
         createInlineField(
@@ -355,7 +355,7 @@ export function createFactCheckSection(
   const section = createCollapsibleCard(
     doc,
     getString("paper-panel-section-fact-check"),
-    false,
+    true,
   );
   section.root.classList.add("ppx-panel", "ppx-panel-section");
   section.content.append(
