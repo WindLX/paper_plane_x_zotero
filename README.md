@@ -1,6 +1,6 @@
 # Paper Plane X Zotero Plugin
 
-Zotero 7 插件，连接 Paper Plane X 后端。
+Zotero 7+ 插件，连接 Paper Plane X 后端。
 
 ## 安装
 
