@@ -1,24 +1,25 @@
 {
   "name": "paper-plane-x-zotero",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Zotero plugin for Paper Plane X",
   "config": {
     "addonName": "Paper Plane X",
-    "addonID": "paperplanex@windlx.local",
+    "addonID": "paperplanex@windlx",
     "addonRef": "paperplanex",
     "addonInstance": "PaperPlaneX",
     "prefsPrefix": "extensions.zotero.paperplanex"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/windlx/paper_plane_x_zotero.git"
+    "url": "git+https://github.com/WindLX/paper_plane_x.git",
+    "directory": "paper_plane_x_zotero"
   },
   "author": "windlx",
   "bugs": {
-    "url": "https://github.com/windlx/paper_plane_x_zotero/issues"
+    "url": "https://github.com/WindLX/paper_plane_x/issues"
   },
-  "homepage": "https://github.com/windlx/paper_plane_x_zotero#readme",
+  "homepage": "https://github.com/WindLX/paper_plane_x/tree/main/paper_plane_x_zotero#readme",
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "start": "zotero-plugin serve",

@@ -1,17 +1,18 @@
 import { defineConfig } from "zotero-plugin-scaffold";
 import pkg from "./package.json";
 
+const releaseRepo = "WindLX/paper_plane_x";
+
 export default defineConfig({
   source: ["src", "addon"],
   dist: ".scaffold/build",
   name: pkg.config.addonName,
   id: pkg.config.addonID,
   namespace: pkg.config.addonRef,
-  updateURL: `https://github.com/{{owner}}/{{repo}}/releases/download/release/${
+  updateURL: `https://github.com/${releaseRepo}/releases/latest/download/${
     pkg.version.includes("-") ? "update-beta.json" : "update.json"
   }`,
-  xpiDownloadLink:
-    "https://github.com/{{owner}}/{{repo}}/releases/download/v{{version}}/{{xpiName}}.xpi",
+  xpiDownloadLink: `https://github.com/${releaseRepo}/releases/download/v{{version}}/{{xpiName}}.xpi`,
 
   build: {
     assets: ["addon/**/*.*"],
