@@ -1,96 +1,183 @@
-# Paper Plane X Zotero Plugin
+# Paper Plane X for Zotero
 
-Zotero 7+ 插件，连接 [Paper Plane X 后端](https://github.com/WindLX/paper_plane_x)。
+[![Release](https://img.shields.io/github/v/release/WindLX/paper_plane_x)](https://github.com/WindLX/paper_plane_x/releases/latest)
+[![Zotero](https://img.shields.io/badge/Zotero-7%2B-CC2936.svg)](https://www.zotero.org/)
+[![License](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
+
+Paper Plane X for Zotero 将 Zotero 文献库连接到 [Paper Plane X](https://github.com/WindLX/paper_plane_x)：你可以直接从 Zotero 上传论文、关联研究项目、查看处理状态，并在右侧信息面板中检查和校正结构化研究结果。
+
+插件适用于希望保留 Zotero 文献管理习惯，同时使用 Paper Plane X 完成 PDF 解析、信息抽取、事实核查和跨论文研究的用户。
+
+## 功能概览
+
+- 从条目右键菜单上传单篇或多篇带 PDF 附件的论文。
+- 将已上传论文批量关联到 Paper Plane X 项目。
+- 在条目列表中显示后端处理状态。
+- 在 Zotero 信息面板中同步、重试和检查分析结果。
+- 编辑 `quick_scan`、`synthesis_data` 与 `analysis_report`，并写回后端。
+- 支持简体中文和英文界面。
 
 ## 安装
 
-下载 `.xpi`，Zotero → Tools → Plugins → Install Plugin From File。
+### 从插件商店安装（推荐）
 
-源码构建：
+1. 打开 [Zotero 中文社区插件商店](https://zotero-chinese.github.io/plugins/)。
+2. 搜索 **Paper Plane X**。
+3. 按插件商店页面提示直接安装。
+4. 返回 Zotero，按提示完成安装或重启。
 
-```bash
-npm install && npm run build
-# .scaffold/build/*.xpi
+这是普通用户最简单的安装方式。Zotero 中文社区插件商店是社区服务，并非 Zotero 官方网站。
+
+### 手动安装 Release
+
+1. 打开 [Paper Plane X 最新 Release](https://github.com/WindLX/paper_plane_x/releases/latest)。
+2. 在 Assets 中下载 `.xpi` 插件文件。
+3. 在 Zotero 中打开 **Tools → Plugins**（工具 → 插件）。
+4. 点击右上角齿轮，选择 **Install Plugin From File**。
+5. 选择下载的 `.xpi`，按提示完成安装或重启 Zotero。
+
+插件清单包含 Paper Plane X monorepo Release 的自动更新地址。通过 Release 安装后，后续版本可由 Zotero 的插件更新机制检查。
+
+### 配置后端
+
+插件本身不运行论文解析服务。使用前请先启动 [Paper Plane X Backend](https://github.com/WindLX/paper_plane_x/tree/main/paper_plane_x_backend)，并确认 Zotero 能访问它。
+
+进入 **Zotero Preferences → Paper Plane X**，在 **Service Base URL** 中填写后端根地址，例如：
+
+```text
+http://127.0.0.1:8000
 ```
 
-## 配置
-
-Zotero Preferences → Paper Plane X：**Service Base URL** 填后端地址，如 `http://127.0.0.1:8000`，不加 `/api/v1`。
+不要添加 `/api/v1`，插件会自动拼接 API 路径。远程部署时建议使用 HTTPS，并避免将未配置访问保护的后端直接暴露到公网。
 
 ![Paper Plane X Zotero 设置](docs/assets/screenshots/zotero-settings.png)
 
-配置完成后，插件会在右键上传、项目关联、状态同步等操作中自动拼接后端 API 地址。
+## 推荐使用流程
 
-## 功能
+1. 在 Paper Plane X Web 中创建项目，并完成 PDF 解析器和 LLM 配置。
+2. 在 Zotero 中确认目标条目包含可访问的 PDF 附件。
+3. 选择一个或多个条目，右键执行 **Upload to Paper Plane X**。
+4. 等待条目列表的 **Paper Plane Status** 更新为完成状态。
+5. 右键执行 **Link Paper to Project**，将论文关联到研究项目。
+6. 在右侧 **Paper Plane X** 面板中检查 Quick Scan、Synthesis Data、Analysis Report 与 Fact Check。
+7. 仅在人工确认内容后使用 **Update Metadata** 写回修改。
+
+没有 PDF 附件的条目会被跳过；批量上传会显示进度和成功、失败、跳过数量。
+
+## 界面与操作
 
 ### 右键菜单
 
-| 操作     | 入口                               | 说明                                                               |
-| -------- | ---------------------------------- | ------------------------------------------------------------------ |
-| 上传     | 右键条目 → Upload to Paper Plane X | 支持批量。选中多个条目批量上传，有进度条。无 PDF 附件的条目会跳过  |
-| 关联项目 | 右键条目 → Link Paper to Project   | 支持批量。已上传的条目弹出项目选择对话框，选中后批量关联到目标项目 |
+| 操作     | 入口                        | 说明                                           |
+| -------- | --------------------------- | ---------------------------------------------- |
+| 上传论文 | **Upload to Paper Plane X** | 上传所选条目的 PDF；支持批量操作               |
+| 关联项目 | **Link Paper to Project**   | 将已上传论文关联到选定的后端项目；支持批量操作 |
 
-### 条目列表
+### 条目状态列
 
-条目列表新增 "Paper Plane Status" 列，显示每个条目的处理状态。首次上传后自动出现。
+条目列表中的 **Paper Plane Status** 列显示每篇论文的后端处理状态，例如 `COMPLETED` 或“尚未上传”，方便快速识别哪些论文已经进入 Paper Plane X 流水线。
 
 ![Zotero 条目列表状态列](docs/assets/screenshots/zotero-items.png)
 
-这一列会把后端处理状态带回 Zotero，例如 `COMPLETED` 或“尚未上传”，方便在文献库列表里快速区分哪些论文已经进入 Paper Plane X 流水线。
+### Paper Plane X 信息面板
 
-### 信息面板
-
-选中条目后，右侧信息面板新增 "Paper Plane X" 标签页。
+选中条目后，右侧信息面板会显示 **Paper Plane X** 标签页。这是插件的主要工作区：
 
 ![Zotero Paper Plane X 信息面板](docs/assets/screenshots/zotero-sidebar.png)
 
-这个面板是 Zotero 内的主要工作区：你可以同步后端数据、上传当前条目 PDF、手动校正处理状态，并查看由 Paper Plane X 抽取和分析出的结构化结果。
+| 操作                           | 作用                                 |
+| ------------------------------ | ------------------------------------ |
+| **Sync 同步**                  | 从后端拉取最新数据并刷新面板与状态列 |
+| **Upload 上传**                | 上传当前条目的 PDF                   |
+| **Retry 重试**                 | 请求后端重新执行解析流程             |
+| **Update Metadata 更新元数据** | 将面板中人工修改的结构化字段写回后端 |
 
-**操作栏**
+面板内容包括：
 
-| 按钮            | 作用                               |
-| --------------- | ---------------------------------- |
-| Sync            | 拉取后端最新数据，刷新面板和状态列 |
-| Upload          | 上传当前条目的 PDF 到后端          |
-| Retry           | 让后端重新解析                     |
-| Update Metadata | 将面板中手动修改的字段写回后端     |
+- **摘要**：`paper_id`、处理状态和后端消息；支持人工校正部分处理状态。
+- **项目关联**：查看、添加或移除当前论文与后端项目的关联。
+- **Quick Scan**：标签、判断、原因和快速摘要。
+- **Synthesis Data**：研究缺口、方法、关键结果和综述摘要。
+- **Analysis Report**：前置概念、核心公式、推导步骤和相关参考文献。
+- **Fact Check**：抽取与分析阶段的事实核查结果，只读展示。
 
-**摘要面板**
+Quick Scan、Synthesis Data 和 Analysis Report 可通过 JSON 编辑器修改。编辑器提供行号、JSON 格式校验和 `Ctrl+S` 保存；无效 JSON 不会提交到后端。
 
-显示 paper_id、处理状态、消息。`extraction_status`、`extraction_fact_check_status`、`analysis_fact_check_status` 三个字段可手动覆盖（用于人工校正）。
+## 数据与安全
 
-**项目关联面板**
-
-列出条目所属的后端项目，每个项目旁有 Unlink 按钮。底部输入框可输入 project_id 关联新增项目。
-
-**Quick Scan**
-
-可折叠面板，显示 tags、verdict、reason、quick_summary。右上角编辑按钮打开 JSON 编辑器。
-
-**Synthesis Data**
-
-可折叠面板，包含 research_gap（context / existing_limit / motivation）、methodology（approach_name / core_logic / innovation / disadvantage / future_direction）、key_results（dataset_env / baseline / performance）、review_summary。各字段显示原始文本及引用标注。右上角编辑按钮打开 JSON 编辑器。
-
-**Analysis Report**
-
-可折叠面板，包含 prerequisites（concept_name / brief_explanation / relevance_to_paper）、core_formulation（problem_definition / objective_function / algorithm_flow）、derivation_steps（step_name / detail_explanation）、related_references（title / reason）。右上角编辑按钮打开 JSON 编辑器。
-
-**Fact Check**
-
-可折叠面板，显示 extraction 和 analysis 的事实核查结果。不可手动编辑。
-
-### JSON 编辑器
-
-编辑 quick_scan、synthesis_data、analysis_report 时弹出独立对话框。带行号、Ctrl+S 保存、JSON 格式校验。保存后写回后端。
+- 执行上传时，插件会将条目的 PDF 和生成请求所需的元数据发送到你配置的 Paper Plane X Backend。
+- 插件将 Paper Plane X 的论文 ID、状态和消息保存在 Zotero 条目元数据中，用于后续同步和展示。
+- 结构化分析结果保存在后端，Zotero 面板通过 API 获取或更新这些内容。
+- Service Base URL 应指向你信任的服务；处理敏感或受许可限制的论文前，请确认你有权上传和处理文件。
+- 不要在 Issue、日志或截图中公开 API Key、私有后端地址或受限论文内容。
 
 ## 开发
 
+### 环境要求
+
+- Zotero 7+
+- Node.js 24
+- npm
+- `just`（可选，用于统一项目命令）
+
+独立开发：
+
 ```bash
+git clone https://github.com/WindLX/paper_plane_x_zotero.git
+cd paper_plane_x_zotero
 npm install
-npm start         # 启动 Zotero + 热加载
-npm run build     # 构建
-npm test
-npm run lint:fix
+npm start
 ```
 
-依赖：Zotero 7、Node.js LTS、npm。
+`npm start` 会启动开发用 Zotero 实例并启用热加载。常用检查：
+
+```bash
+npm run lint:check
+npm test
+npm run build
+```
+
+或使用项目统一命令：
+
+```bash
+just lint
+just test
+just build
+just pre-commit
+```
+
+构建产物位于 `.scaffold/build/`。日常开发可在子仓库独立进行，但正式版本号和发布产物由 Paper Plane X monorepo 统一管理。
+
+## 项目结构
+
+```text
+addon/                  Zotero manifest、界面资源、本地化和样式
+src/domain/             论文领域模型与 API 契约
+src/features/           上传、关联、状态列、侧栏和设置等功能
+src/infra/              Zotero 与后端基础设施适配
+test/                   单元测试
+zotero-plugin.config.ts 构建、更新地址和 XPI 发布配置
+```
+
+## 贡献与 Pull Request
+
+1. 从最新 `main` 创建范围明确的功能或修复分支。
+2. 新增用户可见文本时，同时维护 `en-US` 和 `zh-CN` 本地化资源。
+3. API 或元数据契约变化时，检查旧版条目的兼容性与失败提示。
+4. 为领域映射、校验和数据持久化逻辑补充测试。
+5. 用户流程或界面变化时更新 README 和截图。
+6. 提交 PR 前运行 `just pre-commit`。
+
+PR 描述应包含变更动机、用户影响、界面截图（如适用）、兼容性说明和验证命令。问题与功能建议请提交至 [GitHub Issues](https://github.com/WindLX/paper_plane_x_zotero/issues)。
+
+如果变更发生在 monorepo 工作区，请先向 Zotero 子仓库提交 PR；子仓库合并后，再向 monorepo 提交更新 submodule commit 的 PR。这样可以保持组件历史和顶层发布引用清晰可追溯。
+
+## 发布
+
+插件版本由 Paper Plane X monorepo 根目录的 `VERSION` 统一管理。创建顶层 `vX.Y.Z` 标签后，GitHub Actions 会执行检查、构建 `.xpi` 与 `update.json`，并将它们上传到同一个 GitHub Release。
+
+请勿在子仓库中单独修改版本或创建正式 Release。维护者应使用 monorepo 的版本同步与发布流程，确保后端、前端、CLI 和 Zotero 插件指向同一版本。
+
+## License
+
+Paper Plane X for Zotero 使用 [GNU Affero General Public License v3.0 or later](LICENSE)。提交代码即表示你同意按该许可证发布贡献。
