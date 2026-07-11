@@ -6,11 +6,7 @@ import {
 import { LocalPaperMetadata } from "@/infra/zotero/paperMetadataRepository";
 
 export type PaperActionStatus =
-  | "idle"
-  | "loading"
-  | "success"
-  | "error"
-  | "throttled";
+  "idle" | "loading" | "success" | "error" | "throttled";
 
 export interface PaperActionState {
   status: PaperActionStatus;

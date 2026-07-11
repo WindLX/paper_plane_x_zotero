@@ -21,8 +21,7 @@ export interface StructuredJSONValidationFailure {
 }
 
 export type StructuredJSONValidationResult<T> =
-  | StructuredJSONValidationSuccess<T>
-  | StructuredJSONValidationFailure;
+  StructuredJSONValidationSuccess<T> | StructuredJSONValidationFailure;
 
 export interface StructuredJSONEditorOptions<T extends StructuredEditorValue> {
   title: string;
