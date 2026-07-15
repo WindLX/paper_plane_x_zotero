@@ -23,6 +23,8 @@ interface PaperListColumnDefinition {
   copyable?: boolean;
 }
 
+const TAG_VALUE_SEPARATOR = "\u001f";
+
 const COLUMN_DEFINITIONS: PaperListColumnDefinition[] = [
   {
     key: "status",
@@ -93,7 +95,14 @@ export function registerPaperListColumns() {
         dataProvider: (item: Zotero.Item) =>
           getColumnValue(item, definition.key),
         renderCell: (index, data, column, isFirstColumn, doc) =>
-          renderPaperListCell(index, data, column, isFirstColumn, doc),
+          renderPaperListCell(
+            index,
+            data,
+            column,
+            isFirstColumn,
+            doc,
+            definition.key,
+          ),
       }),
     ),
   );
@@ -115,7 +124,7 @@ export function getColumnValue(
         localMeta.status || getString("paper-panel-placeholder-not-uploaded")
       );
     case "tags":
-      return extractPaperPlaneTags(item).join(", ");
+      return extractPaperPlaneTags(item).join(TAG_VALUE_SEPARATOR);
     case "paperID":
       return localMeta.paperID;
   }
@@ -144,9 +153,25 @@ function renderPaperListCell(
   },
   _isFirstColumn: boolean,
   doc: Document,
+  key: PaperListColumnKey,
 ) {
   const cell = doc.createElement("span");
   cell.className = `cell ${column.className} ppx-list-cell`;
+
+  if (key === "tags") {
+    const tags = data.split(TAG_VALUE_SEPARATOR).filter(Boolean);
+    cell.classList.add("ppx-list-tag-cell");
+    cell.title = tags.join(", ");
+    tags.forEach((tag) => {
+      const chip = doc.createElement("span");
+      chip.className = "ppx-list-tag";
+      chip.textContent = tag;
+      chip.title = tag;
+      cell.appendChild(chip);
+    });
+    return cell;
+  }
+
   cell.textContent = data;
   cell.title = data;
   return cell;
