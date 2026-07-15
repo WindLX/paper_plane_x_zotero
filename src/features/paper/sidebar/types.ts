@@ -32,7 +32,7 @@ export interface PaperSidebarState {
 }
 
 export interface PaperPanelSectionVM {
-  kind: "quickScan" | "synthesis" | "analysis" | "factCheck";
+  kind: "agentNote" | "quickScan" | "synthesis" | "analysis" | "factCheck";
   label: string;
   quickScan?: QuickScan | null;
   detail?: PaperDetailResponse | null;
@@ -60,6 +60,7 @@ export interface PaperSidebarViewModel {
     openQuickScanEditor(): Promise<void>;
     openSynthesisEditor(): Promise<void>;
     openAnalysisEditor(): Promise<void>;
+    saveAgentNote(content: string): Promise<void>;
     updateDraft(key: keyof SidebarDraftState, value: string): void;
     linkProject(): Promise<void>;
     unlinkProject(projectID: string): Promise<void>;

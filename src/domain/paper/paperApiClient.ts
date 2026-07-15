@@ -8,6 +8,7 @@ import {
 import {
   AnalysisReport,
   MessageResponse,
+  PaperAgentNoteResponse,
   PaperDetailResponse,
   PaperStatusOverrides,
   ProjectListResponse,
@@ -26,6 +27,11 @@ export interface PaperApiClient {
   getBaseURL(): string;
   uploadFromItem(item: Zotero.Item): Promise<UploadFromItemResult>;
   fetchDetail(paperID: string): Promise<PaperDetailResponse>;
+  updateAgentNote(
+    paperID: string,
+    content: string,
+  ): Promise<PaperAgentNoteResponse>;
+  deleteAgentNote(paperID: string): Promise<PaperAgentNoteResponse>;
   manualUpdate(
     item: Zotero.Item,
     paperID: string,
@@ -87,6 +93,44 @@ export function createPaperApiClient(): PaperApiClient {
       });
 
       return parseJSONResponse<PaperDetailResponse>(response);
+    },
+    async updateAgentNote(paperID, content) {
+      const baseURL = getPaperServiceBaseURL();
+      if (!baseURL) {
+        throw new Error("paper service base URL is empty");
+      }
+
+      const response = await fetch(
+        buildPaperAgentNoteEndpoint(baseURL, paperID),
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ content }),
+        },
+      );
+
+      return parseJSONResponse<PaperAgentNoteResponse>(response);
+    },
+    async deleteAgentNote(paperID) {
+      const baseURL = getPaperServiceBaseURL();
+      if (!baseURL) {
+        throw new Error("paper service base URL is empty");
+      }
+
+      const response = await fetch(
+        buildPaperAgentNoteEndpoint(baseURL, paperID),
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
+
+      return parseJSONResponse<PaperAgentNoteResponse>(response);
     },
     async manualUpdate(
       item,
@@ -250,6 +294,10 @@ export function buildPaperCollectionEndpoint(baseURL: string) {
 
 export function buildPaperDetailEndpoint(baseURL: string, paperID: string) {
   return `${buildPaperCollectionEndpoint(baseURL)}/${encodeURIComponent(paperID)}`;
+}
+
+export function buildPaperAgentNoteEndpoint(baseURL: string, paperID: string) {
+  return `${buildPaperDetailEndpoint(baseURL, paperID)}/agent-note`;
 }
 
 export function buildProjectDetailEndpoint(baseURL: string, projectID: string) {

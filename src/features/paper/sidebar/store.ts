@@ -421,6 +421,38 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         },
       });
     },
+    async saveAgentNote(content: string) {
+      if (!state.localMeta.paperID || !state.remoteDetail) {
+        showPaperNotice(getString("paper-panel-value-not-synced"), "warning");
+        throw new Error("paper detail is not synced");
+      }
+
+      try {
+        const response = content
+          ? await paperApiClient.updateAgentNote(
+              state.localMeta.paperID,
+              content,
+            )
+          : await paperApiClient.deleteAgentNote(state.localMeta.paperID);
+        patch({
+          remoteDetail: {
+            ...state.remoteDetail,
+            agent_note: response.agent_note,
+          },
+        });
+        showPaperNotice(getString("paper-panel-agent-note-saved"), "success");
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        showPaperNotice(
+          getString("paper-panel-action-failed", {
+            args: { reason: message },
+          }),
+          "error",
+        );
+        ztoolkit.log("Paper agent note save failed", error);
+        throw error;
+      }
+    },
     async linkProject() {
       await withAction("link", async () => {
         if (!state.localMeta.paperID) {

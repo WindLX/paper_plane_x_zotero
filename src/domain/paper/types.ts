@@ -82,6 +82,7 @@ export interface PaperDetailResponse {
   analysis_retry_count: number;
   created_at: string;
   updated_at: string;
+  agent_note?: string | null;
   quick_scan?: QuickScan | null;
   synthesis_data?: SynthesisData | null;
   analysis_report?: AnalysisReport | null;
@@ -93,6 +94,11 @@ export interface PaperDetailResponse {
     project_id?: string;
     name?: string | null;
   }>;
+}
+
+export interface PaperAgentNoteResponse {
+  paper_id: string;
+  agent_note: string | null;
 }
 
 export interface ProjectSummary {

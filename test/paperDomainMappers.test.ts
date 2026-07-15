@@ -2,6 +2,7 @@
 
 import { assert } from "chai";
 import {
+  buildPaperAgentNoteEndpoint,
   buildPaperDetailStatusMessage,
   extractAssociatedProjects,
   extractManualUpdatePayload,
@@ -66,6 +67,13 @@ function createMockItem(overrides?: {
 }
 
 describe("paper domain mappers", function () {
+  it("builds an encoded paper agent note endpoint", function () {
+    assert.equal(
+      buildPaperAgentNoteEndpoint("http://localhost:8000", "paper/a b"),
+      "http://localhost:8000/api/v1/papers/paper%2Fa%20b/agent-note",
+    );
+  });
+
   it("deduplicates associated projects and prefers named entries", function () {
     const result = extractAssociatedProjects({
       paper_id: "paper-1",

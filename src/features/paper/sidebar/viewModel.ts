@@ -22,6 +22,11 @@ export function createPaperSidebarViewModel(
     },
     structuredSections: [
       {
+        kind: "agentNote",
+        label: getString("paper-panel-agent-note-label"),
+        detail: state.remoteDetail,
+      },
+      {
         kind: "quickScan",
         label: getString("paper-panel-quick-scan-label"),
         quickScan: state.remoteDetail?.quick_scan || null,
@@ -50,6 +55,7 @@ export function createPaperSidebarViewModel(
       openQuickScanEditor: () => store.openQuickScanEditor(),
       openSynthesisEditor: () => store.openSynthesisEditor(),
       openAnalysisEditor: () => store.openAnalysisEditor(),
+      saveAgentNote: (content) => store.saveAgentNote(content),
       updateDraft: (key, value) => store.updateDraft(key, value),
       linkProject: () => store.linkProject(),
       unlinkProject: (projectID) => store.unlinkProject(projectID),

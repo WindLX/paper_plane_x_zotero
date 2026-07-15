@@ -45,6 +45,7 @@
 .ppx-sidebar-root button,
 .ppx-sidebar-root input,
 .ppx-sidebar-root select,
+.ppx-sidebar-root textarea,
 .ppx-sidebar-root summary {
   font: inherit;
 }
@@ -174,10 +175,53 @@
 }
 
 .ppx-input:focus,
-.ppx-select:focus {
+.ppx-select:focus,
+.ppx-agent-note-textarea:focus {
   outline: none;
   border-color: var(--ppx-focus-border);
   box-shadow: 0 0 0 2px var(--ppx-focus);
+}
+
+.ppx-agent-note-preview {
+  min-width: 0;
+  padding: 2px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ppx-agent-note-preview > :first-child {
+  margin-top: 0;
+}
+
+.ppx-agent-note-preview > :last-child {
+  margin-bottom: 0;
+}
+
+.ppx-agent-note-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 220px;
+  padding: 10px 12px;
+  border: 1px solid var(--ppx-border-strong);
+  border-radius: var(--ppx-radius-sm);
+  background: var(--ppx-surface);
+  color: inherit;
+  resize: vertical;
+  font-family:
+    ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas,
+    monospace;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ppx-agent-note-textarea:disabled {
+  opacity: 0.72;
+}
+
+.ppx-agent-note-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
 .ppx-select.is-modified {

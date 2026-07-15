@@ -1,4 +1,4 @@
-import { FilePenLine } from "lucide";
+import { FilePenLine, Save, X } from "lucide";
 import { PaperDetailResponse, QuickScan } from "@/domain/paper";
 import { createLucideIcon } from "@/shared/ui/icon/lucide";
 import { el } from "@/shared/ui/dom";
@@ -12,7 +12,166 @@ import {
   createParagraphField,
   createTagField,
   formatJSON,
+  renderMarkdownWithKatex,
 } from "./common";
+
+export function createAgentNoteSection(
+  doc: Document,
+  detail: PaperDetailResponse | null,
+  vm: PaperSidebarViewModel,
+) {
+  const section = createCollapsibleCard(
+    doc,
+    getString("paper-panel-agent-note-label"),
+    true,
+  );
+  section.root.classList.add("ppx-panel", "ppx-panel-section");
+
+  const buttonRow = el(doc, "div", { className: "ppx-section-actions" });
+  const editButton = createSectionButton(
+    doc,
+    getString("paper-panel-action-edit"),
+    FilePenLine,
+  );
+  editButton.disabled = !detail;
+  buttonRow.appendChild(editButton);
+  section.root.querySelector(".ppx-card-summary")?.appendChild(buttonRow);
+
+  if (!detail) {
+    section.content.appendChild(
+      el(doc, "div", {
+        className: "ppx-muted",
+        text: getString("paper-panel-value-not-synced"),
+      }),
+    );
+    return section.root;
+  }
+
+  const note = detail.agent_note || "";
+  renderAgentNotePreview(doc, section.content, note);
+  editButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    section.root.open = true;
+    renderAgentNoteEditor(doc, section.content, note, vm);
+  });
+  return section.root;
+}
+
+function renderAgentNotePreview(
+  doc: Document,
+  content: HTMLDivElement,
+  note: string,
+) {
+  content.replaceChildren();
+  if (!note) {
+    content.appendChild(
+      el(doc, "div", {
+        className: "ppx-muted",
+        text: getString("paper-panel-agent-note-empty"),
+      }),
+    );
+    return;
+  }
+
+  const preview = el(doc, "div", {
+    className: "ppx-agent-note-preview ppx-markdown",
+  });
+  renderMarkdownWithKatex(doc, preview, note);
+  content.appendChild(preview);
+}
+
+function renderAgentNoteEditor(
+  doc: Document,
+  content: HTMLDivElement,
+  originalNote: string,
+  vm: PaperSidebarViewModel,
+) {
+  content.replaceChildren();
+  const textarea = el(doc, "textarea", {
+    className: "ppx-agent-note-textarea",
+    attrs: {
+      rows: "12",
+      placeholder: getString("paper-panel-agent-note-placeholder"),
+      "aria-label": getString("paper-panel-agent-note-label"),
+      spellcheck: "true",
+    },
+  }) as HTMLTextAreaElement;
+  textarea.value = originalNote;
+
+  const actions = el(doc, "div", { className: "ppx-agent-note-actions" });
+  const cancelButton = createSectionButton(
+    doc,
+    getString("paper-panel-action-cancel"),
+    X,
+  );
+  const saveButton = createSectionButton(
+    doc,
+    getString("paper-panel-action-save-note"),
+    Save,
+  );
+
+  const cancel = () => {
+    if (
+      textarea.value !== originalNote &&
+      !doc.defaultView?.confirm(
+        getString("paper-panel-agent-note-unsaved-confirm"),
+      )
+    ) {
+      return;
+    }
+    renderAgentNotePreview(doc, content, originalNote);
+  };
+  cancelButton.addEventListener("click", cancel);
+  saveButton.addEventListener("click", async () => {
+    textarea.disabled = true;
+    cancelButton.disabled = true;
+    saveButton.disabled = true;
+    saveButton.querySelector("span")!.textContent = getString(
+      "paper-panel-action-saving-note",
+    );
+    try {
+      await vm.actions.saveAgentNote(textarea.value);
+    } catch (_error) {
+      textarea.disabled = false;
+      cancelButton.disabled = false;
+      saveButton.disabled = false;
+      saveButton.querySelector("span")!.textContent = getString(
+        "paper-panel-action-save-note",
+      );
+      textarea.focus();
+    }
+  });
+  textarea.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+      event.preventDefault();
+      saveButton.click();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      cancel();
+    }
+  });
+
+  actions.append(cancelButton, saveButton);
+  content.append(textarea, actions);
+  textarea.focus();
+}
+
+function createSectionButton(
+  doc: Document,
+  label: string,
+  icon: Parameters<typeof createLucideIcon>[1],
+) {
+  const button = el(doc, "button", {
+    className: "ppx-button is-secondary",
+  }) as HTMLButtonElement;
+  button.type = "button";
+  button.append(
+    createLucideIcon(doc, icon, { width: 14, height: 14 }),
+    el(doc, "span", { text: label }),
+  );
+  return button;
+}
 
 export function createQuickScanSection(
   doc: Document,

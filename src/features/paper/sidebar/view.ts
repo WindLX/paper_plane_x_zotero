@@ -7,6 +7,7 @@ import {
 } from "./components/panels";
 import {
   createAnalysisSection,
+  createAgentNoteSection,
   createFactCheckSection,
   createQuickScanSection,
   createSynthesisSection,
@@ -41,6 +42,11 @@ export function renderPaperSidebar(
   const sections = el(doc, "div", { className: "ppx-structured-sections" });
   vm.structuredSections.forEach((section) => {
     switch (section.kind) {
+      case "agentNote":
+        sections.appendChild(
+          createAgentNoteSection(doc, section.detail || null, vm),
+        );
+        break;
       case "quickScan":
         sections.appendChild(
           createQuickScanSection(doc, section.quickScan || null, vm),
