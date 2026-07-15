@@ -1,0 +1,149 @@
+:root,
+.ppx-ui-root {
+  color-scheme: light dark;
+  --ppx-accent: #486581;
+  --ppx-accent-hover: #3b556d;
+  --ppx-danger: #c84b31;
+  --ppx-warning: #b45309;
+  --ppx-radius-sm: 6px;
+  --ppx-radius-md: 8px;
+  --ppx-radius-lg: 10px;
+  --ppx-border: color-mix(in srgb, currentColor 10%, transparent);
+  --ppx-border-strong: color-mix(in srgb, currentColor 14%, transparent);
+  --ppx-text: color-mix(in srgb, currentColor 92%, transparent);
+  --ppx-text-muted: color-mix(in srgb, currentColor 68%, transparent);
+  --ppx-surface: color-mix(in srgb, Canvas 96%, currentColor 4%);
+  --ppx-surface-muted: color-mix(in srgb, Canvas 93%, currentColor 7%);
+  --ppx-surface-subtle: color-mix(in srgb, Canvas 98%, currentColor 2%);
+  --ppx-accent-surface: color-mix(in srgb, Canvas 90%, var(--ppx-accent) 10%);
+  --ppx-focus: color-mix(in srgb, var(--ppx-accent) 22%, transparent);
+  --ppx-shadow:
+    0 8px 18px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --ppx-font-mono:
+    ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas,
+    monospace;
+}
+
+.ppx-button,
+.ppx-ui-button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--ppx-border-strong);
+  border-radius: var(--ppx-radius-sm);
+  background: var(--ppx-surface-muted);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 400;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.ppx-button:hover:not(:disabled),
+.ppx-ui-button:hover:not(:disabled) {
+  border-color: var(--ppx-accent);
+  background: var(--ppx-accent-surface);
+}
+
+.ppx-button:focus-visible,
+.ppx-ui-button:focus-visible {
+  outline: none;
+  border-color: var(--ppx-accent);
+  box-shadow: 0 0 0 2px var(--ppx-focus);
+}
+
+.ppx-button:disabled,
+.ppx-ui-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.ppx-button.is-secondary,
+.ppx-ui-button.is-secondary {
+  min-height: 28px;
+  padding: 0 10px;
+}
+
+.ppx-button.is-primary,
+.ppx-ui-button.is-primary {
+  border-color: var(--ppx-accent);
+  background: var(--ppx-accent);
+  color: white;
+}
+
+.ppx-button.is-primary:hover:not(:disabled),
+.ppx-ui-button.is-primary:hover:not(:disabled) {
+  background: var(--ppx-accent-hover);
+}
+
+.ppx-ui-input,
+.ppx-input,
+.ppx-select,
+.ppx-pref-input,
+.ppx-agent-note-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--ppx-border-strong);
+  border-radius: var(--ppx-radius-sm);
+  background: var(--ppx-surface-subtle);
+  color: inherit;
+  font: inherit;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.ppx-ui-input:focus,
+.ppx-input:focus,
+.ppx-select:focus,
+.ppx-pref-input:focus,
+.ppx-agent-note-textarea:focus {
+  outline: none;
+  border-color: var(--ppx-accent);
+  background: var(--ppx-surface);
+  box-shadow: 0 0 0 2px var(--ppx-focus);
+}
+
+.ppx-ui-card,
+.ppx-panel,
+.ppx-pref-card {
+  box-sizing: border-box;
+  border: 1px solid var(--ppx-border);
+  border-radius: var(--ppx-radius-md);
+  background: var(--ppx-surface);
+  box-shadow: var(--ppx-shadow);
+}
+
+.ppx-chip,
+.ppx-ui-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--ppx-border);
+  border-radius: 999px;
+  background: var(--ppx-surface-subtle);
+  color: var(--ppx-text-muted);
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ppx-button,
+  .ppx-ui-button,
+  .ppx-ui-input,
+  .ppx-input,
+  .ppx-select,
+  .ppx-pref-input,
+  .ppx-agent-note-textarea {
+    transition: none;
+  }
+}

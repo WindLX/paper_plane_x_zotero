@@ -1,19 +1,21 @@
-const MAIN_WINDOW_STYLE_ID = "paper-planex-main-window-style";
+const MAIN_WINDOW_STYLE_ID_PREFIX = "paper-planex-main-window-style";
 
 export function registerMainWindowStyle(win: _ZoteroTypes.MainWindow) {
   const doc = win.document;
-  if (doc.getElementById(MAIN_WINDOW_STYLE_ID)) {
-    return;
-  }
-
-  const styles = ztoolkit.UI.createElement(doc, "link", {
-    namespace: "html",
-    properties: {
-      id: MAIN_WINDOW_STYLE_ID,
-      type: "text/css",
-      rel: "stylesheet",
-      href: `chrome://${addon.data.config.addonRef}/content/zoteroPane.css`,
-    },
+  ["ui.css", "zoteroPane.css"].forEach((fileName) => {
+    const styleID = `${MAIN_WINDOW_STYLE_ID_PREFIX}-${fileName}`;
+    if (doc.getElementById(styleID)) {
+      return;
+    }
+    const styles = ztoolkit.UI.createElement(doc, "link", {
+      namespace: "html",
+      properties: {
+        id: styleID,
+        type: "text/css",
+        rel: "stylesheet",
+        href: `chrome://${addon.data.config.addonRef}/content/${fileName}`,
+      },
+    });
+    doc.documentElement?.appendChild(styles);
   });
-  doc.documentElement?.appendChild(styles);
 }

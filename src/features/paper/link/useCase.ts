@@ -5,6 +5,7 @@ import {
   showPaperNotice,
 } from "@/infra/zotero/paperNotificationService";
 import { getString } from "@/utils/locale";
+import { openProjectPickerDialog } from "./dialog";
 
 interface LinkStats {
   success: number;
@@ -45,7 +46,9 @@ export async function linkSelectedItemsToProject() {
   }
 
   // 获取项目列表
-  let projects: Array<{ project_id: string; name: string }>;
+  let projects: Awaited<
+    ReturnType<typeof paperApiClient.listProjects>
+  >["items"];
   try {
     const data = await paperApiClient.listProjects();
     projects = data.items || [];
@@ -59,20 +62,10 @@ export async function linkSelectedItemsToProject() {
     return;
   }
 
-  // 让用户选择项目
-  const projectNames = projects.map((p) => String(p.name || p.project_id));
-  const selectedIndex = { value: 0 };
-  let selected: boolean;
+  // 让用户搜索并选择项目
+  let project;
   try {
-    const Services = ztoolkit.getGlobal("Services");
-    const win = Zotero.getMainWindow?.() || null;
-    selected = Services.prompt.select(
-      win,
-      getString("link-select-project-title"),
-      getString("link-select-project-prompt"),
-      projectNames,
-      selectedIndex,
-    );
+    project = await openProjectPickerDialog(projects, validItems.length);
   } catch (err) {
     ztoolkit.log("Project select dialog error", err);
     showPaperNotice(
@@ -82,11 +75,9 @@ export async function linkSelectedItemsToProject() {
     return;
   }
 
-  if (!selected) {
+  if (!project) {
     return;
   }
-
-  const project = projects[selectedIndex.value];
 
   // 批量关联
   const stats: LinkStats = { success: 0, failed: 0, skipped: 0 };

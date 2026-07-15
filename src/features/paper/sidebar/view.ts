@@ -20,7 +20,7 @@ export function renderPaperSidebar(
 ) {
   const doc = mountEl.ownerDocument || ztoolkit.getGlobal("document");
   mountEl.replaceChildren();
-  mountEl.className = "ppx-sidebar-root";
+  mountEl.className = "ppx-sidebar-root ppx-ui-root";
 
   const wrap = el(doc, "div", { className: "ppx-sidebar" });
   mountEl.appendChild(wrap);

@@ -1,4 +1,5 @@
 import { CheckCheck, Save, Wand2, X } from "lucide";
+import { registerDialogStyles } from "@/shared/ui/dialogStyle";
 import { createLucideIcon } from "@/shared/ui/icon/lucide";
 import { getString } from "@/utils/locale";
 import { StructuredJSONEditorOptions, StructuredEditorValue } from "./types";
@@ -33,6 +34,7 @@ export async function openStructuredJSONEditorDialog<
       if (!doc) {
         return;
       }
+      registerDialogStyles(doc);
       const textarea = doc.getElementById(
         "ppx-quick-scan-json-textarea",
       ) as HTMLTextAreaElement | null;
@@ -104,56 +106,38 @@ export async function openStructuredJSONEditorDialog<
     .addCell(0, 0, {
       tag: "div",
       namespace: "html",
-      styles: {
-        padding: "20px 22px",
-        marginBottom: "18px",
-        borderRadius: "10px",
-        border: "1px solid rgba(15, 23, 42, 0.10)",
-        background:
-          "linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.92))",
-        boxShadow: "0 10px 24px rgba(15, 23, 42, 0.06)",
-      },
+      classList: ["ppx-editor-header"],
       children: [
         {
           tag: "div",
           namespace: "html",
+          classList: ["ppx-editor-title"],
           properties: {
             innerText: options.title || "-",
-          },
-          styles: {
-            fontSize: "18px",
-            fontWeight: "700",
-            marginBottom: "8px",
-            color: "rgba(15, 23, 42, 0.92)",
           },
         },
         {
           tag: "div",
           namespace: "html",
-          styles: {
-            display: "flex",
-            gap: "8px",
-            flexWrap: "wrap",
-            alignItems: "center",
-          },
+          classList: ["ppx-editor-meta"],
           children: [
             {
               tag: "span",
               namespace: "html",
+              classList: ["ppx-chip"],
               properties: {
                 innerText: `paper_id: ${options.paperID}`,
               },
-              styles: infoChipStyle(),
             },
             {
               tag: "span",
               namespace: "html",
+              classList: ["ppx-chip"],
               properties: {
                 innerText: options.updatedAt
                   ? `${getString("paper-panel-updated-at-label")}: ${options.updatedAt}`
                   : getString("paper-panel-value-not-synced"),
               },
-              styles: infoChipStyle(),
             },
           ],
         },
@@ -162,70 +146,25 @@ export async function openStructuredJSONEditorDialog<
     .addCell(1, 0, {
       tag: "div",
       namespace: "html",
-      styles: {
-        display: "grid",
-        gridTemplateColumns: "50px minmax(0, 1fr)",
-        overflow: "hidden",
-        marginBottom: "14px",
-        borderRadius: "10px",
-        border: "1px solid rgba(15, 23, 42, 0.14)",
-        background:
-          "linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.96))",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.8), 0 10px 24px rgba(15, 23, 42, 0.05)",
-      },
+      classList: ["ppx-editor-shell"],
       children: [
         {
           tag: "pre",
           namespace: "html",
           id: "ppx-quick-scan-line-numbers",
+          classList: ["ppx-editor-lines"],
           properties: {
             innerText: "1",
-          },
-          styles: {
-            margin: "0",
-            padding: "14px 8px 14px 0",
-            minHeight: "360px",
-            boxSizing: "border-box",
-            textAlign: "right",
-            color: "rgba(100, 116, 139, 0.9)",
-            background: "rgba(226, 232, 240, 0.72)",
-            borderRight: "1px solid rgba(15, 23, 42, 0.08)",
-            fontFamily:
-              'ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas, monospace',
-            fontSize: "13px",
-            lineHeight: `${QUICK_SCAN_EDITOR_LINE_HEIGHT_PX}px`,
-            userSelect: "none",
-            overflow: "hidden",
-            whiteSpace: "pre",
           },
         },
         {
           tag: "textarea",
           namespace: "html",
           id: "ppx-quick-scan-json-textarea",
+          classList: ["ppx-editor-textarea"],
           attributes: {
             spellcheck: "false",
             wrap: "soft",
-          },
-          styles: {
-            width: "100%",
-            minHeight: "360px",
-            boxSizing: "border-box",
-            padding: "14px 16px",
-            border: "none",
-            background: "transparent",
-            color: "rgba(15, 23, 42, 0.92)",
-            outline: "none",
-            fontFamily:
-              'ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas, monospace',
-            fontSize: "13px",
-            lineHeight: `${QUICK_SCAN_EDITOR_LINE_HEIGHT_PX}px`,
-            resize: "vertical",
-            overflow: "auto",
-            whiteSpace: "pre-wrap",
-            overflowWrap: "anywhere",
-            wordBreak: "break-word",
           },
         },
       ],
@@ -233,56 +172,34 @@ export async function openStructuredJSONEditorDialog<
     .addCell(2, 0, {
       tag: "p",
       namespace: "html",
+      classList: ["ppx-editor-description"],
       properties: {
         innerText: options.description,
-      },
-      styles: {
-        margin: "0 0 12px",
-        padding: "0 4px",
-        fontSize: "12px",
-        lineHeight: "1.6",
-        opacity: "0.82",
       },
     })
     .addCell(3, 0, {
       tag: "div",
       namespace: "html",
       id: "ppx-quick-scan-validation",
+      classList: ["ppx-editor-feedback", "is-error"],
       properties: {
         innerText: "",
-      },
-      styles: {
-        minHeight: "18px",
-        padding: "2px 6px 0",
-        fontSize: "12px",
-        color: "#b45309",
       },
     })
     .addCell(4, 0, {
       tag: "div",
       namespace: "html",
       id: "ppx-quick-scan-status",
+      classList: ["ppx-editor-feedback", "is-status"],
       properties: {
         innerText: "",
-      },
-      styles: {
-        minHeight: "18px",
-        padding: "0 6px 14px",
-        fontSize: "12px",
-        color: "rgba(15,23,42,0.72)",
       },
     })
     .addCell(5, 0, {
       tag: "div",
       namespace: "html",
       id: "ppx-quick-scan-actions",
-      styles: {
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        gap: "6px",
-        padding: "0 2px 0 2px",
-      },
+      classList: ["ppx-dialog-actions"],
       children: [
         makeActionButton(
           "ppx-quick-scan-format",
@@ -440,22 +357,9 @@ export async function openStructuredJSONEditorDialog<
         return;
       }
       button.dataset.ppxDecorated = "true";
-      button.setAttribute(
-        "style",
-        [
-          "display:inline-flex",
-          "align-items:center",
-          "justify-content:center",
-          "gap:6px",
-          "min-height:28px",
-          "padding:0 12px",
-          "border:1px solid rgba(15,23,42,0.14)",
-          "border-radius:6px",
-          "background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(241,245,249,0.92))",
-          "box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)",
-          "color:rgba(15,23,42,0.86)",
-        ].join(";"),
-      );
+      button.className = `ppx-button${
+        id === "ppx-quick-scan-save" ? " is-primary" : ""
+      }`;
       button.textContent = "";
       button.append(
         createLucideIcon(doc, icon, {
@@ -649,20 +553,6 @@ function normalizeMeasuredText(value: string) {
     return `${value}\u200b`;
   }
   return value;
-}
-
-function infoChipStyle() {
-  return {
-    display: "inline-flex",
-    alignItems: "center",
-    minHeight: "24px",
-    padding: "0 8px",
-    borderRadius: "999px",
-    border: "1px solid rgba(15, 23, 42, 0.10)",
-    background: "rgba(255,255,255,0.82)",
-    fontSize: "12px",
-    color: "rgba(15, 23, 42, 0.72)",
-  };
 }
 
 function makeActionButton(id: string, text: string) {

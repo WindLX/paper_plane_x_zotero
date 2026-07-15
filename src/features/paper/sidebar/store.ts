@@ -21,6 +21,7 @@ import {
   validateSynthesisJSON,
 } from "../quickScanEditor/validation";
 import { uploadSingleItem } from "../upload/useCase";
+import { primePaperListRemoteMetadata } from "../list/metadataCache";
 import {
   PaperActionState,
   PaperSidebarState,
@@ -154,6 +155,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
       message: buildPaperDetailStatusMessage(detail),
     });
     await syncQuickScanTagsToItem(state.item, detail.quick_scan || null);
+    primePaperListRemoteMetadata(detail);
     refreshLocalMeta();
   };
 
@@ -473,6 +475,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
             projectIDInput: "",
           },
         });
+        primePaperListRemoteMetadata(detail);
         await resolveProjectNames();
         showPaperNotice(
           getString("paper-panel-project-link-success", {
@@ -492,6 +495,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
           state.localMeta.paperID,
         );
         patch({ remoteDetail: detail });
+        primePaperListRemoteMetadata(detail);
         await resolveProjectNames();
         showPaperNotice(
           getString("paper-panel-project-unlink-success", {

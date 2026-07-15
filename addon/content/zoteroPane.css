@@ -1,35 +1,3 @@
-:root {
-  --ppx-radius-sm: 6px;
-  --ppx-radius-md: 8px;
-  --ppx-border: color-mix(in srgb, currentColor 10%, transparent);
-  --ppx-border-strong: color-mix(in srgb, currentColor 14%, transparent);
-  --ppx-surface:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.14),
-      rgba(255, 255, 255, 0.03)
-    ),
-    var(--material-card-background, transparent);
-  --ppx-surface-muted:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(255, 255, 255, 0.04)
-    ),
-    color-mix(in srgb, currentColor 2%, transparent);
-  --ppx-surface-subtle:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.12),
-      rgba(255, 255, 255, 0.02)
-    ),
-    color-mix(in srgb, currentColor 1.5%, transparent);
-  --ppx-focus: rgba(72, 101, 129, 0.16);
-  --ppx-focus-border: #486581;
-  --ppx-shadow:
-    0 8px 18px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.24);
-}
-
 .ppx-sidebar-root {
   user-select: text;
   -moz-user-select: text;
@@ -58,10 +26,6 @@
   display: grid;
   gap: 10px;
   padding: 14px;
-  border: 1px solid var(--ppx-border);
-  border-radius: var(--ppx-radius-md);
-  box-shadow: var(--ppx-shadow);
-  background: var(--ppx-surface);
 }
 
 .ppx-field-row {
@@ -139,7 +103,7 @@
 
 .ppx-copy-button:hover:not(:disabled),
 .ppx-quote-button:hover:not(:disabled) {
-  color: color-mix(in srgb, currentColor 88%, var(--ppx-focus-border) 12%);
+  color: color-mix(in srgb, currentColor 88%, var(--ppx-accent) 12%);
   text-decoration-color: currentColor;
 }
 
@@ -166,20 +130,7 @@
   min-height: 28px;
   height: 28px;
   padding: 0 10px;
-  border: 1px solid var(--ppx-border-strong);
-  border-radius: var(--ppx-radius-sm);
-  background: var(--ppx-surface);
-  color: inherit;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
   font-size: 14px;
-}
-
-.ppx-input:focus,
-.ppx-select:focus,
-.ppx-agent-note-textarea:focus {
-  outline: none;
-  border-color: var(--ppx-focus-border);
-  box-shadow: 0 0 0 2px var(--ppx-focus);
 }
 
 .ppx-agent-note-preview {
@@ -202,14 +153,8 @@
   width: 100%;
   min-height: 220px;
   padding: 10px 12px;
-  border: 1px solid var(--ppx-border-strong);
-  border-radius: var(--ppx-radius-sm);
-  background: var(--ppx-surface);
-  color: inherit;
   resize: vertical;
-  font-family:
-    ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas,
-    monospace;
+  font-family: var(--ppx-font-mono);
   font-size: 13px;
   line-height: 1.55;
 }
@@ -281,37 +226,6 @@
 .ppx-input {
   flex: 1;
   min-width: 150px;
-}
-
-.ppx-button {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  justify-content: center;
-  min-height: 30px;
-  padding: 0 12px;
-  border: 1px solid var(--ppx-border-strong);
-  border-radius: var(--ppx-radius-sm);
-  background: var(--ppx-surface-muted);
-  color: inherit;
-  cursor: pointer;
-  font-weight: 400;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
-}
-
-.ppx-button:hover:not(:disabled) {
-  background: var(--ppx-surface);
-  border-color: var(--ppx-focus-border);
-}
-
-.ppx-button:disabled {
-  cursor: progress;
-  opacity: 0.72;
-}
-
-.ppx-button.is-secondary {
-  min-height: 28px;
-  padding: 0 10px;
 }
 
 .ppx-project-row .ppx-button,
@@ -510,4 +424,13 @@
 
 .ppx-summary-panel .ppx-field-row {
   gap: 6px;
+}
+
+.ppx-list-cell {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
