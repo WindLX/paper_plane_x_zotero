@@ -149,8 +149,9 @@ body.ppx-dialog-body {
 
 #ppx-project-picker-list {
   flex: 1 1 auto;
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 8px;
   min-height: 0;
   padding: 4px 4px 4px 0;
@@ -158,15 +159,21 @@ body.ppx-dialog-body {
 }
 
 .ppx-project-picker-card {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 11px;
+  box-sizing: border-box;
   width: 100%;
+  min-height: 78px;
+  height: auto;
   padding: 12px;
   border: 1px solid var(--ppx-border);
   border-radius: var(--ppx-radius-md);
+  appearance: none;
   background: var(--ppx-surface-subtle);
   color: inherit;
+  font: inherit;
   text-align: left;
   cursor: pointer;
   transition:
