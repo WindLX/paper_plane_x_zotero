@@ -4,5 +4,7 @@ item-section-paper-plane-sidenav-tooltip =
     .tooltiptext = Paper Plane X 论文状态
 menuitem-upload-paper =
     .label = 上传到 Paper Plane X
+menuitem-fetch-paper =
+    .label = 从 Paper Plane X 批量获取信息
 menuitem-link-paper =
     .label = 关联到 Paper Plane X 项目

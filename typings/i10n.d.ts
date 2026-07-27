@@ -3,6 +3,11 @@
 /* eslint-disable */
 // @ts-nocheck
 export type FluentMessageId =
+  | 'fetch-base-url-missing'
+  | 'fetch-finish'
+  | 'fetch-item-failed'
+  | 'fetch-no-selection'
+  | 'fetch-start'
   | 'item-section-paper-plane-head-text'
   | 'item-section-paper-plane-sidenav-tooltip'
   | 'link-action-confirm'
@@ -25,6 +30,7 @@ export type FluentMessageId =
   | 'link-select-project-title'
   | 'link-selected-items-count'
   | 'link-start'
+  | 'menuitem-fetch-paper'
   | 'menuitem-link-paper'
   | 'menuitem-upload-paper'
   | 'paper-list-column-paper-id'

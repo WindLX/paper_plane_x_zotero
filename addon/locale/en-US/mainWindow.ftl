@@ -4,5 +4,7 @@ item-section-paper-plane-sidenav-tooltip =
     .tooltiptext = Paper Plane X paper status
 menuitem-upload-paper =
     .label = Upload to Paper Plane X
+menuitem-fetch-paper =
+    .label = Fetch from Paper Plane X
 menuitem-link-paper =
     .label = Link to Paper Plane X Project

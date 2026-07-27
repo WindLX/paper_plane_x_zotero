@@ -1,4 +1,5 @@
 import { registerPaperUploadMenuItem } from "./features/paper/upload/entry";
+import { registerPaperFetchMenuItem } from "./features/paper/fetch/entry";
 import { registerPaperLinkMenuItem } from "./features/paper/link/entry";
 import { registerPaperSidebarSection } from "./features/paper/sidebar/entry";
 import { registerPaperListColumns } from "./features/paper/list/entry";
@@ -39,6 +40,7 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   registerMainWindowStyle(win);
   registerPaperSidebarSection();
   registerPaperUploadMenuItem();
+  registerPaperFetchMenuItem();
   registerPaperLinkMenuItem();
 }
 

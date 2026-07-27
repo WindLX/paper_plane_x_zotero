@@ -1,5 +1,4 @@
 import {
-  buildPaperDetailStatusMessage,
   createPaperApiClient,
   extractAssociatedProjects,
 } from "@/domain/paper";
@@ -9,7 +8,6 @@ import {
   paperMetadataRepository,
 } from "@/infra/zotero/paperMetadataRepository";
 import { showPaperNotice } from "@/infra/zotero/paperNotificationService";
-import { syncQuickScanTagsToItem } from "@/infra/zotero/paperTagSync";
 import { getString } from "@/utils/locale";
 import { openStructuredJSONEditorDialog } from "../quickScanEditor/dialog";
 import {
@@ -22,6 +20,7 @@ import {
 } from "../quickScanEditor/validation";
 import { uploadSingleItem } from "../upload/useCase";
 import { primePaperListRemoteMetadata } from "../list/metadataCache";
+import { syncPaperDetailToItem } from "../sync/detailSync";
 import {
   PaperActionState,
   PaperSidebarState,
@@ -149,13 +148,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
     if (!state.item) {
       return;
     }
-    await paperMetadataRepository.write(state.item, {
-      paperID: detail.paper_id,
-      status: detail.extraction_status,
-      message: buildPaperDetailStatusMessage(detail),
-    });
-    await syncQuickScanTagsToItem(state.item, detail.quick_scan || null);
-    primePaperListRemoteMetadata(detail);
+    await syncPaperDetailToItem(state.item, detail);
     refreshLocalMeta();
   };
 
