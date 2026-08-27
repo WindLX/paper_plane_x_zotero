@@ -123,6 +123,21 @@ export interface ProjectListResponse {
   limit: number;
 }
 
+export interface ProjectPaperSearchResponse {
+  project_id: string;
+  limit: number;
+  offset: number;
+  total: number;
+  paper_ids: string[];
+}
+
+export interface PaperListResponse {
+  items: PaperDetailResponse[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
 export interface MessageResponse {
   message: string;
 }

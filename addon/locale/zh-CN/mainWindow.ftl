@@ -8,3 +8,7 @@ menuitem-fetch-paper =
     .label = 从 Paper Plane X 批量获取信息
 menuitem-link-paper =
     .label = 关联到 Paper Plane X 项目
+menuitem-sync-project-to-collection =
+    .label = 从 Paper Plane X 项目同步到这里
+menuitem-unlink-project-from-collection =
+    .label = 取消与 Paper Plane X 项目的关联

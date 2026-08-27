@@ -8,3 +8,7 @@ menuitem-fetch-paper =
     .label = Fetch from Paper Plane X
 menuitem-link-paper =
     .label = Link to Paper Plane X Project
+menuitem-sync-project-to-collection =
+    .label = Sync Paper Plane X Project Here
+menuitem-unlink-project-from-collection =
+    .label = Unlink Paper Plane X Project

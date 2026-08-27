@@ -149,3 +149,17 @@ link-start = 正在关联到「{ $projectName }」...
 link-item-failed = 关联「{ $title }」失败：{ $reason }
 link-item-skipped-no-paper-id = 跳过「{ $title }」：尚未上传
 link-finish = 关联完成：成功 { $success }，失败 { $failed }，跳过 { $skipped }
+
+project-sync-base-url-missing = 未配置 Paper Plane X 服务地址，请先在首选项中设置。
+project-sync-projects-failed = 获取 Paper Plane X 项目列表失败。
+project-sync-no-projects = 当前没有可用的 Paper Plane X 项目。
+project-sync-select-title = 选择要同步的项目
+project-sync-select-prompt = 选择要增补到「{ $collection }」的 Paper Plane X 项目。
+project-sync-action-confirm = 同步到 collection
+project-sync-start = 正在将「{ $project }」同步到「{ $collection }」...
+project-sync-item-failed = { $paperID } 同步失败：{ $reason }
+project-sync-item-conflict = { $paperID } 存在无法自动消歧的 Zotero 条目（item ID：{ $itemIDs }），未修改任何条目。
+project-sync-finish = 同步完成：共 { $total } 篇，新建 { $created }，复用 { $reused }，补充 PDF { $pdfAdded }，冲突 { $conflicts }，失败 { $failed }
+project-sync-failed = 项目同步失败：{ $reason }
+project-sync-unlink-confirm = 确定取消「{ $collection }」与 { $count } 个 Paper Plane X 项目的关联吗？现有 Zotero 条目、PDF 和 collection 成员不会被删除。
+project-sync-unlink-finish = 已取消「{ $collection }」与 { $count } 个 Paper Plane X 项目的关联；现有内容保持不变。

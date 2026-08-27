@@ -149,3 +149,17 @@ link-start = Linking to "{ $projectName }"...
 link-item-failed = Link "{ $title }" failed: { $reason }
 link-item-skipped-no-paper-id = Skipped "{ $title }": not uploaded yet
 link-finish = Link complete: { $success } succeeded, { $failed } failed, { $skipped } skipped
+
+project-sync-base-url-missing = Paper Plane X service URL is not configured. Please set it in preferences.
+project-sync-projects-failed = Failed to fetch the Paper Plane X project list.
+project-sync-no-projects = No Paper Plane X projects are available.
+project-sync-select-title = Select Project to Sync
+project-sync-select-prompt = Select the Paper Plane X project to add to “{ $collection }”.
+project-sync-action-confirm = Sync to collection
+project-sync-start = Syncing “{ $project }” to “{ $collection }”...
+project-sync-item-failed = Sync failed for { $paperID }: { $reason }
+project-sync-item-conflict = { $paperID } has ambiguous Zotero matches (item IDs: { $itemIDs }); no item was modified.
+project-sync-finish = Sync complete: { $total } total, { $created } created, { $reused } reused, { $pdfAdded } PDFs added, { $conflicts } conflicts, { $failed } failed
+project-sync-failed = Project sync failed: { $reason }
+project-sync-unlink-confirm = Unlink “{ $collection }” from { $count } Paper Plane X project(s)? Existing Zotero items, PDFs, and collection membership will not be deleted.
+project-sync-unlink-finish = Unlinked “{ $collection }” from { $count } Paper Plane X project(s). Existing content was left unchanged.

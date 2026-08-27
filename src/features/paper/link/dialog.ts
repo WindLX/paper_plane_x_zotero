@@ -7,10 +7,16 @@ import { filterProjects } from "./projectFilter";
 
 export async function openProjectPickerDialog(
   projects: ProjectResponse[],
-  selectedItemCount: number,
+  selectedItemCount: number | null,
+  options: {
+    initialProjectID?: string;
+    title?: string;
+    prompt?: string;
+    confirmLabel?: string;
+  } = {},
 ): Promise<ProjectResponse | null> {
   const dialogHelper: any = new ztoolkit.Dialog(1, 1);
-  let selectedProjectID = "";
+  let selectedProjectID = options.initialProjectID || "";
   let result: ProjectResponse | null = null;
 
   const dialogData: {
@@ -24,7 +30,7 @@ export async function openProjectPickerDialog(
         return;
       }
       registerDialogStyles(doc);
-      decorateStaticContent(doc, selectedItemCount);
+      decorateStaticContent(doc, selectedItemCount, options);
 
       const input = doc.getElementById(
         "ppx-project-picker-search",
@@ -201,7 +207,7 @@ export async function openProjectPickerDialog(
       ],
     })
     .setDialogData(dialogData as any)
-    .open(getString("link-select-project-title"), {
+    .open(options.title || getString("link-select-project-title"), {
       width: 720,
       height: 680,
       centerscreen: true,
@@ -297,7 +303,15 @@ function findProjectCard(doc: Document, projectID: string) {
   ).find((element) => element.dataset.projectId === projectID);
 }
 
-function decorateStaticContent(doc: Document, selectedItemCount: number) {
+function decorateStaticContent(
+  doc: Document,
+  selectedItemCount: number | null,
+  options: {
+    title?: string;
+    prompt?: string;
+    confirmLabel?: string;
+  },
+) {
   const header = doc.getElementById("ppx-project-picker-header");
   const searchIcon = doc.getElementById("ppx-project-picker-search-icon");
   const clearButton = doc.getElementById("ppx-project-picker-clear");
@@ -322,28 +336,43 @@ function decorateStaticContent(doc: Document, selectedItemCount: number) {
   );
   const titleText = doc.createElement("div");
   titleText.append(
-    createTextElement(doc, "h1", getString("link-select-project-title")),
-    createTextElement(doc, "p", getString("link-select-project-prompt")),
-  );
-  titleRow.append(titleIcon, titleText);
-  header.append(
-    titleRow,
     createTextElement(
       doc,
-      "span",
-      getString("link-selected-items-count", {
-        args: { count: selectedItemCount },
-      }),
-      "ppx-chip ppx-project-picker-count",
+      "h1",
+      options.title || getString("link-select-project-title"),
+    ),
+    createTextElement(
+      doc,
+      "p",
+      options.prompt || getString("link-select-project-prompt"),
     ),
   );
+  titleRow.append(titleIcon, titleText);
+  header.append(titleRow);
+  if (selectedItemCount !== null) {
+    header.append(
+      createTextElement(
+        doc,
+        "span",
+        getString("link-selected-items-count", {
+          args: { count: selectedItemCount },
+        }),
+        "ppx-chip ppx-project-picker-count",
+      ),
+    );
+  }
 
   searchIcon.appendChild(
     createLucideIcon(doc, Search, { width: 16, height: 16 }),
   );
   clearButton.appendChild(createLucideIcon(doc, X, { width: 15, height: 15 }));
   decorateButton(doc, cancelButton, X, getString("paper-panel-action-cancel"));
-  decorateButton(doc, confirmButton, Link, getString("link-action-confirm"));
+  decorateButton(
+    doc,
+    confirmButton,
+    Link,
+    options.confirmLabel || getString("link-action-confirm"),
+  );
 }
 
 function decorateButton(

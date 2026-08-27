@@ -8,6 +8,10 @@ import { registerPrefsScripts } from "./features/preferences/controller";
 import { registerPreferencesPane } from "./features/preferences/entry";
 import { createZToolkit } from "./utils/ztoolkit";
 import { registerMainWindowStyle } from "./shared/ui/mainWindowStyle";
+import {
+  registerProjectCollectionSyncMenuItem,
+  unregisterProjectCollectionSyncMenuItem,
+} from "./features/projectSync/entry";
 
 async function onStartup() {
   await Promise.all([
@@ -42,6 +46,7 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   registerPaperUploadMenuItem();
   registerPaperFetchMenuItem();
   registerPaperLinkMenuItem();
+  registerProjectCollectionSyncMenuItem();
 }
 
 async function onMainWindowUnload(win: Window): Promise<void> {
@@ -50,6 +55,7 @@ async function onMainWindowUnload(win: Window): Promise<void> {
 }
 
 function onShutdown(): void {
+  unregisterProjectCollectionSyncMenuItem();
   ztoolkit.unregisterAll();
   addon.data.dialog?.window?.close();
   // Remove addon object

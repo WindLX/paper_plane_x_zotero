@@ -11,6 +11,7 @@ Paper Plane X for Zotero 将 Zotero 文献库连接到 [Paper Plane X](https://g
 ## 功能概览
 
 - 从条目右键菜单上传单篇或多篇带 PDF 附件的论文。
+- 从任意可写 collection 的右键菜单，将一个 Paper Plane X 项目手工同步到该 collection。
 - 将已上传论文批量关联到 Paper Plane X 项目。
 - 在条目列表中显示后端处理状态。
 - 在 Zotero 信息面板中同步、重试和检查分析结果。
@@ -62,6 +63,8 @@ http://127.0.0.1:8000
 6. 在右侧 **Paper Plane X** 面板中检查 Quick Scan、Synthesis Data、Analysis Report 与 Fact Check。
 7. 仅在人工确认内容后使用 **Update Metadata** 写回修改。
 
+若要把 PPX 项目增补到 Zotero，在目标 collection 上右键选择 **从 Paper Plane X 项目同步到这里**，选择项目并确认。插件会递归检查目标 collection 及其所有子 collection，再检查同一 Zotero library；按 `paper_plane_id`、其次 DOI 复用条目，只补空缺元数据和缺失 PDF，不覆盖或删除已有内容。映射会保存，但同步只在用户手工触发时运行。若不再需要保存该映射，可在同一 collection 上右键选择 **取消与 Paper Plane X 项目的关联**；此操作只删除映射，不删除条目、PDF 或 collection 成员。
+
 没有 PDF 附件的条目会被跳过；批量上传会显示进度和成功、失败、跳过数量。
 
 ## 界面与操作
@@ -72,6 +75,8 @@ http://127.0.0.1:8000
 | -------- | --------------------------- | ---------------------------------------------- |
 | 上传论文 | **Upload to Paper Plane X** | 上传所选条目的 PDF；支持批量操作               |
 | 关联项目 | **Link Paper to Project**   | 将已上传论文关联到选定的后端项目；支持批量操作 |
+
+Collection 右键菜单还提供 **从 Paper Plane X 项目同步到这里**。同一项目重新选择 collection 时会更新保存的目标；重复同步不会重复创建已匹配条目或 PDF。存在映射时还会显示 **取消与 Paper Plane X 项目的关联**，经确认后移除当前 collection 的全部 PPX 项目映射。
 
 ### 条目状态列
 
@@ -107,6 +112,7 @@ Quick Scan、Synthesis Data 和 Analysis Report 可通过 JSON 编辑器修改�
 
 - 执行上传时，插件会将条目的 PDF 和生成请求所需的元数据发送到你配置的 Paper Plane X Backend。
 - 插件将 Paper Plane X 的论文 ID、状态和消息保存在 Zotero 条目元数据中，用于后续同步和展示。
+- PPX 项目到 collection 的同步是单向增补操作，不会因为论文从 PPX 项目移除而删除 Zotero 条目、附件或 collection 成员。
 - 结构化分析结果保存在后端，Zotero 面板通过 API 获取或更新这些内容。
 - Service Base URL 应指向你信任的服务；处理敏感或受许可限制的论文前，请确认你有权上传和处理文件。
 - 不要在 Issue、日志或截图中公开 API Key、私有后端地址或受限论文内容。

@@ -10,8 +10,10 @@ import {
   MessageResponse,
   PaperAgentNoteResponse,
   PaperDetailResponse,
+  PaperListResponse,
   PaperStatusOverrides,
   ProjectListResponse,
+  ProjectPaperSearchResponse,
   ProjectResponse,
   QuickScan,
   SynthesisData,
@@ -45,7 +47,14 @@ export interface PaperApiClient {
   ): Promise<PaperDetailResponse>;
   reprocess(item: Zotero.Item, paperID: string): Promise<UploadResponse>;
   fetchProjectDetail(projectID: string): Promise<ProjectResponse>;
-  listProjects(): Promise<ProjectListResponse>;
+  listProjects(offset?: number, limit?: number): Promise<ProjectListResponse>;
+  searchProjectPapers(
+    projectID: string,
+    offset: number,
+    limit: number,
+  ): Promise<ProjectPaperSearchResponse>;
+  batchGetPapers(paperIDs: string[]): Promise<PaperListResponse>;
+  downloadPaperPDF(paperID: string): Promise<Uint8Array>;
   linkProject(projectID: string, paperID: string): Promise<MessageResponse>;
   unlinkProject(projectID: string, paperID: string): Promise<MessageResponse>;
 }
@@ -227,14 +236,14 @@ export function createPaperApiClient(): PaperApiClient {
 
       return parseJSONResponse<ProjectResponse>(response);
     },
-    async listProjects() {
+    async listProjects(offset = 0, limit = 100) {
       const baseURL = getPaperServiceBaseURL();
       if (!baseURL) {
         throw new Error("paper service base URL is empty");
       }
 
       const response = await fetch(
-        `${baseURL}/api/v1/projects?offset=0&limit=100`,
+        `${baseURL}/api/v1/projects?offset=${offset}&limit=${limit}`,
         {
           method: "GET",
           headers: {
@@ -244,6 +253,63 @@ export function createPaperApiClient(): PaperApiClient {
       );
 
       return parseJSONResponse<ProjectListResponse>(response);
+    },
+    async searchProjectPapers(projectID, offset, limit) {
+      const baseURL = getPaperServiceBaseURL();
+      if (!baseURL) {
+        throw new Error("paper service base URL is empty");
+      }
+      const response = await fetch(
+        `${buildProjectDetailEndpoint(baseURL, projectID)}/search`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            offset,
+            limit,
+            only_completed: false,
+          }),
+        },
+      );
+      return parseJSONResponse<ProjectPaperSearchResponse>(response);
+    },
+    async batchGetPapers(paperIDs) {
+      const baseURL = getPaperServiceBaseURL();
+      if (!baseURL) {
+        throw new Error("paper service base URL is empty");
+      }
+      const response = await fetch(
+        `${buildPaperCollectionEndpoint(baseURL)}/batch-get?offset=0&limit=100`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(paperIDs),
+        },
+      );
+      return parseJSONResponse<PaperListResponse>(response);
+    },
+    async downloadPaperPDF(paperID) {
+      const baseURL = getPaperServiceBaseURL();
+      if (!baseURL) {
+        throw new Error("paper service base URL is empty");
+      }
+      const response = await fetch(
+        `${buildPaperDetailEndpoint(baseURL, paperID)}/pdf?download=true`,
+        { headers: { Accept: "application/pdf" } },
+      );
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP ${response.status}: ${errorText || "PDF download failed"}`,
+        );
+      }
+      return new Uint8Array(await response.arrayBuffer());
     },
     async linkProject(projectID, paperID) {
       const baseURL = getPaperServiceBaseURL();
