@@ -1,12 +1,14 @@
 # Paper Plane X for Zotero
 
 [![Release](https://img.shields.io/github/v/release/WindLX/paper_plane_x)](https://github.com/WindLX/paper_plane_x/releases/latest)
-[![Zotero](https://img.shields.io/badge/Zotero-7%2B-CC2936.svg)](https://www.zotero.org/)
+[![Zotero](https://img.shields.io/badge/Zotero-7--10-CC2936.svg)](https://www.zotero.org/)
 [![License](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
 
 Paper Plane X for Zotero 将 Zotero 文献库连接到 [Paper Plane X](https://github.com/WindLX/paper_plane_x)：你可以直接从 Zotero 上传论文、关联研究项目、查看处理状态，并在右侧信息面板中检查和校正结构化研究结果。
 
 插件适用于希望保留 Zotero 文献管理习惯，同时使用 Paper Plane X 完成 PDF 解析、信息抽取、事实核查和跨论文研究的用户。
+
+插件清单明确支持 Zotero 7、8、9 和 10。项目同步菜单同时适配 Zotero 10 的复数 collection selection API 与 Zotero 7 的旧接口。
 
 ## 功能概览
 
@@ -121,7 +123,7 @@ Quick Scan、Synthesis Data 和 Analysis Report 可通过 JSON 编辑器修改�
 
 ### 环境要求
 
-- Zotero 7+
+- Zotero 7–10
 - Node.js 24
 - npm
 - `just`（可选，用于统一项目命令）

@@ -3,7 +3,7 @@
 ## 作用域与工具链
 
 - 本文件适用于 Zotero 插件独立仓库。若在 monorepo 中开发，同时遵循上级 `AGENTS.md`；冲突时以本文件的项目级规则为准。
-- 本项目是 Zotero 7+ TypeScript 插件，使用 npm、`zotero-plugin-scaffold` 和 Zotero 测试环境。以 `package.json`、`package-lock.json`、TypeScript / ESLint / Prettier 配置、`zotero-plugin.config.ts`、本目录 `justfile` 和测试为事实源。
+- 本项目是兼容 Zotero 7–10 的 TypeScript 插件，使用 npm、`zotero-plugin-scaffold` 和 Zotero 测试环境。以 `package.json`、`package-lock.json`、TypeScript / ESLint / Prettier 配置、`zotero-plugin.config.ts`、本目录 `justfile` 和测试为事实源。
 - 常用命令：`just setup`、`just dev`、`just test`、`just lint`、`just format-check`、`just build`、`just pre-commit`。依赖变化只使用 npm 更新 lockfile，不混用 pnpm 或 yarn。
 - `just dev` 会启动外部 Zotero 实例，`release` 会产生发布行为或产物；仅在任务明确需要时运行。普通开发验证优先使用 lint、test 和 build。
 
