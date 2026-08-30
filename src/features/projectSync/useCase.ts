@@ -1,5 +1,6 @@
 import { createPaperApiClient } from "@/domain/paper";
 import {
+  buildProjectSyncPDFFilename,
   collectProjectSyncSubtreeItemIDs,
   fetchAllProjectPapers,
   matchProjectPaper,
@@ -282,7 +283,7 @@ async function syncPaper(
   let pdfAdded = false;
   if (!hasPDFAttachment(item)) {
     const pdf = await paperApiClient.downloadPaperPDF(paper.paper_id);
-    await attachPDF(item, paper.paper_id, pdf);
+    await attachPDF(item, paper, pdf);
     pdfAdded = true;
   }
   return { result, itemID: item.id, pdfAdded };
@@ -368,23 +369,29 @@ function hasPDFAttachment(item: Zotero.Item) {
 
 async function attachPDF(
   item: Zotero.Item,
-  paperID: string,
+  paper: PaperDetailResponse,
   bytes: Uint8Array,
 ) {
-  const path = PathUtils.join(
+  const filename = buildProjectSyncPDFFilename(paper);
+  const temporaryDirectory = await IOUtils.createUniqueDirectory(
     Zotero.getTempDirectory().path,
-    `paper-plane-x-${paperID}.pdf`,
+    "paper-plane-x-",
   );
-  await IOUtils.write(path, bytes);
+  const path = PathUtils.join(temporaryDirectory, filename);
   try {
+    await IOUtils.write(path, bytes);
     await Zotero.Attachments.importFromFile({
       file: path,
       parentItemID: item.id,
-      title: "Paper Plane X PDF",
+      title: filename,
+      fileBaseName: filename.slice(0, -".pdf".length),
       contentType: "application/pdf",
     });
   } finally {
-    await IOUtils.remove(path, { ignoreAbsent: true });
+    await IOUtils.remove(temporaryDirectory, {
+      ignoreAbsent: true,
+      recursive: true,
+    });
   }
 }
 

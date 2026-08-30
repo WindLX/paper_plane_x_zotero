@@ -65,7 +65,7 @@ http://127.0.0.1:8000
 6. 在右侧 **Paper Plane X** 面板中检查 Quick Scan、Synthesis Data、Analysis Report 与 Fact Check。
 7. 仅在人工确认内容后使用 **Update Metadata** 写回修改。
 
-若要把 PPX 项目增补到 Zotero，在目标 collection 上右键选择 **从 Paper Plane X 项目同步到这里**，选择项目并确认。插件会递归检查目标 collection 及其所有子 collection，再检查同一 Zotero library；按 `paper_plane_id`、其次 DOI 复用条目，只补空缺元数据和缺失 PDF，不覆盖或删除已有内容。映射会保存，但同步只在用户手工触发时运行。若不再需要保存该映射，可在同一 collection 上右键选择 **取消与 Paper Plane X 项目的关联**；此操作只删除映射，不删除条目、PDF 或 collection 成员。
+若要把 PPX 项目增补到 Zotero，在目标 collection 上右键选择 **从 Paper Plane X 项目同步到这里**，选择项目并确认。插件会递归检查目标 collection 及其所有子 collection，再检查同一 Zotero library；按 `paper_plane_id`、其次 DOI 复用条目，只补空缺元数据和缺失 PDF，不覆盖或删除已有内容。新增 PDF 的附件标题和实际文件名使用“文献标题 - 第一作者.pdf”；缺少作者时只使用标题，文件名会清理跨平台非法字符并安全截断。映射会保存，但同步只在用户手工触发时运行。若不再需要保存该映射，可在同一 collection 上右键选择 **取消与 Paper Plane X 项目的关联**；此操作只删除映射，不删除条目、PDF 或 collection 成员。
 
 没有 PDF 附件的条目会被跳过；批量上传会显示进度和成功、失败、跳过数量。
 

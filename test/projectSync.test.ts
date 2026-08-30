@@ -2,6 +2,7 @@
 
 import { assert } from "chai";
 import {
+  buildProjectSyncPDFFilename,
   collectProjectSyncSubtreeItemIDs,
   fetchAllProjectPapers,
   matchProjectPaper,
@@ -32,6 +33,39 @@ function paper(paperID: string, doi?: string): PaperDetailResponse {
 }
 
 describe("PPX project to Zotero collection sync", function () {
+  it("builds searchable PDF names from title and first author", function () {
+    assert.equal(
+      buildProjectSyncPDFFilename({
+        ...paper("paper-1"),
+        title: "Flight/Control: A Study?",
+        authors: ["Alice Smith", "Bob Chen"],
+      }),
+      "Flight Control A Study - Alice Smith.pdf",
+    );
+  });
+
+  it("keeps attachment filenames portable and within filesystem limits", function () {
+    const filename = buildProjectSyncPDFFilename({
+      ...paper("paper-1"),
+      title: "飞行控制".repeat(80),
+      authors: ["张三"],
+    });
+
+    assert.isAtMost(new TextEncoder().encode(filename).length, 220);
+    assert.match(filename, /\.pdf$/);
+    assert.notMatch(filename, /[<>:"/\\|?*]/);
+  });
+
+  it("does not invent an author when metadata is missing", function () {
+    assert.equal(
+      buildProjectSyncPDFFilename({
+        ...paper("paper-1"),
+        title: "A Useful Paper",
+      }),
+      "A Useful Paper.pdf",
+    );
+  });
+
   it("uses Zotero 10 plural collection rows without reading the removed getter", function () {
     const selectedRow = { id: 7 };
     const context = {

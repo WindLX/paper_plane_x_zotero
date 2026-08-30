@@ -33,6 +33,9 @@ export interface ProjectPaperFetchResult {
 }
 
 const PAGE_SIZE = 100;
+const PDF_EXTENSION = ".pdf";
+const MAX_PDF_FILENAME_BYTES = 220;
+const FORBIDDEN_FILENAME_CHARACTERS = '<>:"/\\|?*';
 
 export function collectProjectSyncSubtreeItemIDs(
   rootCollectionID: number,
@@ -72,6 +75,24 @@ export function normalizeProjectSyncDOI(value: string | null | undefined) {
     .toLowerCase()
     .replace(/^https?:\/\/(?:dx\.)?doi\.org\//, "")
     .replace(/^doi:\s*/, "");
+}
+
+export function buildProjectSyncPDFFilename(paper: PaperDetailResponse) {
+  const title = sanitizeFilenameSegment(paper.title || "");
+  const firstAuthor = sanitizeFilenameSegment(
+    paper.authors.find((author) => author.trim()) || "",
+  );
+  const effectiveTitle =
+    title || sanitizeFilenameSegment(`Paper Plane X ${paper.paper_id}`);
+  const baseName = firstAuthor
+    ? `${effectiveTitle} - ${firstAuthor}`
+    : effectiveTitle;
+  const availableBytes = MAX_PDF_FILENAME_BYTES - PDF_EXTENSION.length;
+  const truncated = truncateUtf8(baseName, availableBytes).replace(
+    /[. ]+$/,
+    "",
+  );
+  return `${truncated || `Paper Plane X ${paper.paper_id}`}${PDF_EXTENSION}`;
 }
 
 export function matchProjectPaper(
@@ -166,4 +187,41 @@ function resolveCandidates(
     itemID: unique[0].itemID,
     inTargetSubtree: unique[0].inTargetSubtree,
   };
+}
+
+function sanitizeFilenameSegment(value: string) {
+  const sanitized = Array.from(value.normalize("NFC"), (character) => {
+    const codePoint = character.codePointAt(0) || 0;
+    if (
+      codePoint < 32 ||
+      codePoint === 127 ||
+      FORBIDDEN_FILENAME_CHARACTERS.includes(character)
+    ) {
+      return " ";
+    }
+    return character;
+  })
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/[. ]+$/, "");
+  if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(sanitized)) {
+    return `_${sanitized}`;
+  }
+  return sanitized;
+}
+
+function truncateUtf8(value: string, maxBytes: number) {
+  const encoder = new TextEncoder();
+  let byteCount = 0;
+  let result = "";
+  for (const character of value) {
+    const characterBytes = encoder.encode(character).length;
+    if (byteCount + characterBytes > maxBytes) {
+      break;
+    }
+    result += character;
+    byteCount += characterBytes;
+  }
+  return result;
 }

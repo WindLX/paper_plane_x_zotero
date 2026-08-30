@@ -1,7 +1,7 @@
 {
   "name": "paper-plane-x-zotero",
   "type": "module",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Zotero plugin for Paper Plane X",
   "config": {
     "addonName": "Paper Plane X",
