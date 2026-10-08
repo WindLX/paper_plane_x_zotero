@@ -1,4 +1,5 @@
 import { getLocaleID } from "@/utils/locale";
+import { getSelectedRegularItems } from "../batch/selection";
 import { uploadSelectedItems } from "./useCase";
 
 const ITEM_MENU_ID = "zotero-itemmenu-paper-plane-x-upload";
@@ -19,8 +20,15 @@ export function registerPaperUploadMenuItem() {
         menuType: "menuitem",
         l10nID: getLocaleID("menuitem-upload-paper"),
         icon: `chrome://${addon.data.config.addonRef}/content/icons/favicon@0.5x.svg`,
-        onCommand: async () => {
-          await uploadSelectedItems();
+        onCommand: async (_event, context) => {
+          const win = context.menuElem.ownerGlobal;
+          if (!win) {
+            return;
+          }
+          await uploadSelectedItems(
+            getSelectedRegularItems(context.items),
+            win,
+          );
         },
       },
     ],

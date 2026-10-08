@@ -1,7 +1,7 @@
 {
   "name": "paper-plane-x-zotero",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Zotero plugin for Paper Plane X",
   "config": {
     "addonName": "Paper Plane X",
@@ -27,7 +27,7 @@
     "lint:check": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint . --fix",
     "release": "zotero-plugin release",
-    "test": "npm run test:manifest && zotero-plugin test",
+    "test": "npm run test:manifest && zotero-plugin test --no-watch",
     "test:manifest": "node test/manifestCompatibility.node.mjs",
     "update-deps": "npm update --save"
   },

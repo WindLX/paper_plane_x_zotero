@@ -163,3 +163,34 @@ project-sync-finish = 同步完成：共 { $total } 篇，新建 { $created }，
 project-sync-failed = 项目同步失败：{ $reason }
 project-sync-unlink-confirm = 确定取消「{ $collection }」与 { $count } 个 Paper Plane X 项目的关联吗？现有 Zotero 条目、PDF 和 collection 成员不会被删除。
 project-sync-unlink-finish = 已取消「{ $collection }」与 { $count } 个 Paper Plane X 项目的关联；现有内容保持不变。
+
+batch-already-running = 已有 Paper Plane X 批量操作正在进行，请等待其完成。
+batch-stopped = 批量操作已提前停止：Zotero 窗口关闭或插件已卸载。
+batch-skip-no-paper-id = 尚未上传到 Paper Plane X
+batch-skip-no-local-pdf = 未找到本地 PDF
+batch-skip-in-progress = 后端状态仍为 { $status }
+
+fetch-item-skipped = 跳过「{ $title }」：{ $reason }
+fetch-item-missing = Paper Plane X 未返回「{ $title }」（{ $paperID }）
+
+reprocess-base-url-missing = 请先在插件设置中配置 Paper Plane X 服务地址
+reprocess-no-selection = 未选中可重新处理的文献条目
+reprocess-start = 正在重新处理选中的 { $count } 篇文献
+reprocess-confirm = 确定要重新处理选中的 { $count } 篇文献吗？本地 PDF 会重新上传，后端将重新解析。
+reprocess-item-skipped = 跳过「{ $title }」：{ $reason }
+reprocess-item-failed = 重新处理失败：{ $title }（{ $reason }）
+reprocess-finish = 重新处理完成：成功 { $success }，失败 { $failed }，跳过 { $skipped }
+
+unlink-base-url-missing = 请先在插件设置中配置 Paper Plane X 服务地址
+unlink-no-selection = 未选中可解除关联的文献条目
+unlink-no-paper-id = 选中的文献尚未上传到 Paper Plane X。
+unlink-fetch-projects-failed = 获取 Paper Plane X 项目列表失败。
+unlink-no-projects = 当前没有可用的 Paper Plane X 项目。
+unlink-select-title = 选择要解除关联的项目
+unlink-select-prompt = 选择要从选中的 { $count } 篇文献中解除关联的 Paper Plane X 项目。
+unlink-action-confirm = 解除关联
+unlink-confirm = 确定将选中的 { $count } 篇文献从「{ $project }」解除关联吗？Zotero 条目、PDF、paper_id 与其他项目关联都会保留。
+unlink-start = 正在从「{ $projectName }」解除关联...
+unlink-item-skipped = 跳过「{ $title }」：{ $reason }
+unlink-item-failed = 解除关联失败：{ $title }（{ $reason }）
+unlink-finish = 已从 { $project } 解除关联：成功 { $success }，失败 { $failed }，跳过 { $skipped }

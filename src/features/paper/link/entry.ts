@@ -1,4 +1,5 @@
 import { getLocaleID } from "@/utils/locale";
+import { getSelectedRegularItems } from "../batch/selection";
 import { linkSelectedItemsToProject } from "./useCase";
 
 const ITEM_MENU_ID = "zotero-itemmenu-paper-plane-x-link";
@@ -19,8 +20,15 @@ export function registerPaperLinkMenuItem() {
         menuType: "menuitem",
         l10nID: getLocaleID("menuitem-link-paper"),
         icon: `chrome://${addon.data.config.addonRef}/content/icons/favicon@0.5x.svg`,
-        onCommand: async () => {
-          await linkSelectedItemsToProject();
+        onCommand: async (_event, context) => {
+          const win = context.menuElem.ownerGlobal;
+          if (!win) {
+            return;
+          }
+          await linkSelectedItemsToProject(
+            getSelectedRegularItems(context.items),
+            win,
+          );
         },
       },
     ],

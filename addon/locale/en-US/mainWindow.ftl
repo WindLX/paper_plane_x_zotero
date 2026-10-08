@@ -12,3 +12,7 @@ menuitem-sync-project-to-collection =
     .label = Sync Paper Plane X Project Here
 menuitem-unlink-project-from-collection =
     .label = Unlink Paper Plane X Project
+menuitem-reprocess-paper =
+    .label = Reprocess in Paper Plane X
+menuitem-unlink-paper-project =
+    .label = Unlink from Paper Plane X Project

@@ -3,6 +3,15 @@ import { registerPaperFetchMenuItem } from "./features/paper/fetch/entry";
 import { registerPaperLinkMenuItem } from "./features/paper/link/entry";
 import { registerPaperSidebarSection } from "./features/paper/sidebar/entry";
 import { registerPaperListColumns } from "./features/paper/list/entry";
+import {
+  registerPaperReprocessMenuItem,
+  unregisterPaperReprocessMenuItem,
+} from "./features/paper/reprocess/entry";
+import {
+  registerPaperUnlinkMenuItem,
+  unregisterPaperUnlinkMenuItem,
+} from "./features/paper/unlink/entry";
+import { stopActiveBatchSession } from "./features/paper/batch/session";
 import { initLocale } from "./utils/locale";
 import { registerPrefsScripts } from "./features/preferences/controller";
 import { registerPreferencesPane } from "./features/preferences/entry";
@@ -46,15 +55,23 @@ async function onMainWindowLoad(win: _ZoteroTypes.MainWindow): Promise<void> {
   registerPaperUploadMenuItem();
   registerPaperFetchMenuItem();
   registerPaperLinkMenuItem();
+  registerPaperReprocessMenuItem();
+  registerPaperUnlinkMenuItem();
   registerProjectCollectionSyncMenuItem();
 }
 
 async function onMainWindowUnload(win: Window): Promise<void> {
+  // Only the window that started a batch stops it; other windows keep theirs.
+  stopActiveBatchSession(win);
   ztoolkit.unregisterAll();
   addon.data.dialog?.window?.close();
 }
 
 function onShutdown(): void {
+  // Plugin unload stops the active batch regardless of which window owns it.
+  stopActiveBatchSession();
+  unregisterPaperReprocessMenuItem();
+  unregisterPaperUnlinkMenuItem();
   unregisterProjectCollectionSyncMenuItem();
   ztoolkit.unregisterAll();
   addon.data.dialog?.window?.close();

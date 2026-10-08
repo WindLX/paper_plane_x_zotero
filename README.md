@@ -15,6 +15,8 @@ Paper Plane X for Zotero 将 Zotero 文献库连接到 [Paper Plane X](https://g
 - 从条目右键菜单上传单篇或多篇带 PDF 附件的论文。
 - 从任意可写 collection 的右键菜单，将一个 Paper Plane X 项目手工同步到该 collection。
 - 将已上传论文批量关联到 Paper Plane X 项目。
+- 用后端批量接口刷新选中论文的信息，单个请求块不超过 100 个 `paper_id`。
+- 批量重新处理已上传且空闲的论文，并批量从指定 Paper Plane X 项目解除关联。
 - 在条目列表中显示后端处理状态。
 - 在 Zotero 信息面板中同步、重试和检查分析结果。
 - 编辑 `quick_scan`、`synthesis_data` 与 `analysis_report`，并写回后端。
@@ -65,6 +67,8 @@ http://127.0.0.1:8000
 6. 在右侧 **Paper Plane X** 面板中检查 Quick Scan、Synthesis Data、Analysis Report 与 Fact Check。
 7. 仅在人工确认内容后使用 **Update Metadata** 写回修改。
 
+论文处理状态变化或后端重新部署后，可对所选条目执行 **Fetch from Paper Plane X** 批量刷新信息；需要重新解析时执行 **Reprocess in Paper Plane X**，确认后插件会重新上传本地 PDF。要把论文从某个研究项目中移出，执行 **Unlink from Paper Plane X Project** 并选择目标项目；该操作只删除论文与该项目之间的关联，保留 Zotero 条目、PDF 附件、`paper_id` 绑定与其他项目关联。
+
 若要把 PPX 项目增补到 Zotero，在目标 collection 上右键选择 **从 Paper Plane X 项目同步到这里**，选择项目并确认。插件会递归检查目标 collection 及其所有子 collection，再检查同一 Zotero library；按 `paper_plane_id`、其次 DOI 复用条目，只补空缺元数据和缺失 PDF，不覆盖或删除已有内容。新增 PDF 的附件标题和实际文件名使用“文献标题 - 第一作者.pdf”；缺少作者时只使用标题，文件名会清理跨平台非法字符并安全截断。映射会保存，但同步只在用户手工触发时运行。若不再需要保存该映射，可在同一 collection 上右键选择 **取消与 Paper Plane X 项目的关联**；此操作只删除映射，不删除条目、PDF 或 collection 成员。
 
 没有 PDF 附件的条目会被跳过；批量上传会显示进度和成功、失败、跳过数量。
@@ -73,10 +77,15 @@ http://127.0.0.1:8000
 
 ### 右键菜单
 
-| 操作     | 入口                        | 说明                                           |
-| -------- | --------------------------- | ---------------------------------------------- |
-| 上传论文 | **Upload to Paper Plane X** | 上传所选条目的 PDF；支持批量操作               |
-| 关联项目 | **Link Paper to Project**   | 将已上传论文关联到选定的后端项目；支持批量操作 |
+| 操作     | 入口                                  | 说明                                           |
+| -------- | ------------------------------------- | ---------------------------------------------- |
+| 上传论文 | **Upload to Paper Plane X**           | 上传所选条目的 PDF；支持批量操作               |
+| 刷新信息 | **Fetch from Paper Plane X**          | 拉取所选论文的最新后端信息；支持批量操作       |
+| 关联项目 | **Link Paper to Project**             | 将已上传论文关联到选定的后端项目；支持批量操作 |
+| 重新处理 | **Reprocess in Paper Plane X**        | 确认后重新提交所选论文的 PDF；支持批量操作     |
+| 解除关联 | **Unlink from Paper Plane X Project** | 从指定项目解除所选论文的关联；支持批量操作     |
+
+条目级批量操作按 `paper_id` 合并重复请求：多篇 Zotero 条目绑定同一篇论文时只发起一次后端请求，结果分别写回每个条目，重新处理取该组中第一个带本地 PDF 的条目作为上传源；绑定缺失、没有本地 PDF 或状态仍为 `PENDING`/`PROCESSING` 的条目会被跳过并给出原因。批量刷新按每块不超过 100 个 `paper_id` 调用后端批量接口，后端未返回的 `paper_id` 会单独报告，单项失败不会中断整批，也不会把已写入的条目重复计入失败。上传、刷新、关联、重新处理与解除关联共用同一个批量锁，同一时间只允许一个批量操作运行；发起该操作的 Zotero 窗口关闭后只停止它自己的批量操作并汇总已完成的结果，其他窗口不受影响，插件卸载时会停止仍在运行的批量操作。
 
 Collection 右键菜单还提供 **从 Paper Plane X 项目同步到这里**。同一项目重新选择 collection 时会更新保存的目标；重复同步不会重复创建已匹配条目或 PDF。存在映射时还会显示 **取消与 Paper Plane X 项目的关联**，经确认后移除当前 collection 的全部 PPX 项目映射。
 
@@ -155,6 +164,8 @@ just pre-commit
 ```
 
 构建产物位于 `.scaffold/build/`。日常开发可在子仓库独立进行，但正式版本号和发布产物由 Paper Plane X monorepo 统一管理。
+
+`npm test`（以及 `just test`、`just pre-commit`）单次运行测试并在完成后退出。需要监听文件变化时，使用 `npx zotero-plugin test`。
 
 ## 项目结构
 

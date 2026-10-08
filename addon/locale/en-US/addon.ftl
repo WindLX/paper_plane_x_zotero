@@ -163,3 +163,34 @@ project-sync-finish = Sync complete: { $total } total, { $created } created, { $
 project-sync-failed = Project sync failed: { $reason }
 project-sync-unlink-confirm = Unlink “{ $collection }” from { $count } Paper Plane X project(s)? Existing Zotero items, PDFs, and collection membership will not be deleted.
 project-sync-unlink-finish = Unlinked “{ $collection }” from { $count } Paper Plane X project(s). Existing content was left unchanged.
+
+batch-already-running = Another Paper Plane X batch operation is still running. Please wait for it to finish.
+batch-stopped = The batch stopped early because a Zotero window closed or the plugin was unloaded.
+batch-skip-no-paper-id = not uploaded to Paper Plane X yet
+batch-skip-no-local-pdf = no local PDF found
+batch-skip-in-progress = backend status is still { $status }
+
+fetch-item-skipped = Skipped “{ $title }”: { $reason }
+fetch-item-missing = Paper Plane X did not return “{ $title }” ({ $paperID })
+
+reprocess-base-url-missing = Please set the Paper Plane X service URL in preferences first
+reprocess-no-selection = No regular library items selected
+reprocess-start = Reprocessing { $count } selected paper(s)
+reprocess-confirm = Reprocess { $count } selected paper(s)? Their local PDFs are uploaded again and the backend rebuilds the analysis.
+reprocess-item-skipped = Skipped “{ $title }”: { $reason }
+reprocess-item-failed = Reprocess failed: { $title } ({ $reason })
+reprocess-finish = Reprocess complete: { $success } succeeded, { $failed } failed, { $skipped } skipped
+
+unlink-base-url-missing = Please set the Paper Plane X service URL in preferences first
+unlink-no-selection = No regular library items selected
+unlink-no-paper-id = Selected items have not been uploaded to Paper Plane X yet.
+unlink-fetch-projects-failed = Failed to fetch the Paper Plane X project list.
+unlink-no-projects = No Paper Plane X projects are available.
+unlink-select-title = Select Project to Unlink
+unlink-select-prompt = Select the Paper Plane X project to unlink from the { $count } selected paper(s).
+unlink-action-confirm = Unlink from project
+unlink-confirm = Unlink { $count } selected paper(s) from “{ $project }”? Zotero items, PDFs, paper IDs, and other project links will be kept.
+unlink-start = Unlinking from “{ $projectName }”...
+unlink-item-skipped = Skipped “{ $title }”: { $reason }
+unlink-item-failed = Unlink failed: { $title } ({ $reason })
+unlink-finish = Unlink complete from { $project }: { $success } succeeded, { $failed } failed, { $skipped } skipped

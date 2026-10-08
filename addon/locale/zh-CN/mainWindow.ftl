@@ -12,3 +12,7 @@ menuitem-sync-project-to-collection =
     .label = 从 Paper Plane X 项目同步到这里
 menuitem-unlink-project-from-collection =
     .label = 取消与 Paper Plane X 项目的关联
+menuitem-reprocess-paper =
+    .label = 在 Paper Plane X 中重新处理
+menuitem-unlink-paper-project =
+    .label = 解除 Paper Plane X 项目关联

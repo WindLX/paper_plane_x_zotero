@@ -36,25 +36,172 @@ function fakeItem(id: number): Zotero.Item {
   } as unknown as Zotero.Item;
 }
 
+function paperIDMap(paperIDs: Record<number, string>) {
+  const map = new Map(
+    Object.entries(paperIDs).map(([id, paperID]) => [Number(id), paperID]),
+  );
+  return (item: Zotero.Item) => {
+    const paperID = map.get(item.id);
+    if (paperID === undefined) {
+      throw new Error(`missing paper id for item ${item.id}`);
+    }
+    return paperID;
+  };
+}
+
 describe("paper batch fetch", function () {
-  it("continues after failures and reports success, failure, and skipped counts", async function () {
+  it("batch-gets every unique paper_id and syncs each duplicate item", async function () {
     const items = [fakeItem(1), fakeItem(2), fakeItem(3)];
-    const paperIDs = new Map([
-      [1, "paper-success"],
-      [2, "paper-failure"],
-      [3, ""],
-    ]);
+    const requests: string[][] = [];
     const synced: number[] = [];
-    const progress: number[] = [];
     const dependencies: FetchDependencies = {
-      readPaperID(item) {
-        return paperIDs.get(item.id) || "";
+      readPaperID: paperIDMap({ 1: "p1", 2: "p1", 3: "p2" }),
+      async batchGetPapers(paperIDs) {
+        requests.push([...paperIDs]);
+        return { items: paperIDs.map(detail) };
       },
-      async fetchDetail(paperID) {
-        if (paperID === "paper-failure") {
-          throw new Error("network failure");
+      async syncDetail(item) {
+        synced.push(item.id);
+      },
+    };
+
+    const stats = await fetchPaperDetailsForItems(items, dependencies);
+
+    assert.deepEqual(requests, [["p1", "p2"]]);
+    assert.deepEqual(synced, [1, 2, 3]);
+    assert.deepEqual(stats, {
+      success: 3,
+      failed: 0,
+      skipped: 0,
+      stopped: false,
+    });
+  });
+
+  it("reports missing paper ids explicitly and keeps going", async function () {
+    const items = [fakeItem(1), fakeItem(2), fakeItem(3)];
+    const missing: string[] = [];
+    const dependencies: FetchDependencies = {
+      readPaperID: paperIDMap({ 1: "p1", 2: "missing", 3: "p3" }),
+      async batchGetPapers() {
+        return { items: [detail("p1"), detail("p3")] };
+      },
+      async syncDetail() {},
+    };
+
+    const stats = await fetchPaperDetailsForItems(items, dependencies, {
+      onMissing(_item, paperID) {
+        missing.push(paperID);
+      },
+    });
+
+    assert.deepEqual(missing, ["missing"]);
+    assert.deepEqual(stats, {
+      success: 2,
+      failed: 1,
+      skipped: 0,
+      stopped: false,
+    });
+  });
+
+  it("skips items without a paper_id binding", async function () {
+    const items = [fakeItem(1), fakeItem(2)];
+    let requests = 0;
+    const skipped: number[] = [];
+    const dependencies: FetchDependencies = {
+      readPaperID: paperIDMap({ 1: "p1", 2: "" }),
+      async batchGetPapers(paperIDs) {
+        requests += 1;
+        return { items: paperIDs.map(detail) };
+      },
+      async syncDetail() {},
+    };
+
+    const stats = await fetchPaperDetailsForItems(items, dependencies, {
+      onSkip(item) {
+        skipped.push(item.id);
+      },
+    });
+
+    assert.equal(requests, 1);
+    assert.deepEqual(skipped, [2]);
+    assert.deepEqual(stats, {
+      success: 1,
+      failed: 0,
+      skipped: 1,
+      stopped: false,
+    });
+  });
+
+  it("splits more than 100 paper ids and continues after a failed chunk", async function () {
+    const items = Array.from({ length: 150 }, (_, index) =>
+      fakeItem(index + 1),
+    );
+    const paperIDs: Record<number, string> = {};
+    items.forEach((item) => {
+      paperIDs[item.id] = `p${item.id}`;
+    });
+    const chunkSizes: number[] = [];
+    const errors: string[] = [];
+    const dependencies: FetchDependencies = {
+      readPaperID: paperIDMap(paperIDs),
+      async batchGetPapers(ids) {
+        chunkSizes.push(ids.length);
+        if (chunkSizes.length === 1) {
+          throw new Error("HTTP 500");
         }
-        return detail(paperID);
+        return { items: ids.map(detail) };
+      },
+      async syncDetail() {},
+    };
+
+    const stats = await fetchPaperDetailsForItems(items, dependencies, {
+      onError(_item, reason) {
+        errors.push(reason);
+      },
+    });
+
+    assert.deepEqual(chunkSizes, [100, 50]);
+    assert.equal(errors.length, 100);
+    assert.deepEqual(stats, {
+      success: 50,
+      failed: 100,
+      skipped: 0,
+      stopped: false,
+    });
+  });
+
+  it("stops before the next request when the batch session ends", async function () {
+    const items = [fakeItem(1), fakeItem(2)];
+    let requests = 0;
+    const dependencies: FetchDependencies = {
+      readPaperID: paperIDMap({ 1: "p1", 2: "p2" }),
+      async batchGetPapers(paperIDs) {
+        requests += 1;
+        return { items: paperIDs.map(detail) };
+      },
+      async syncDetail() {},
+    };
+
+    const stats = await fetchPaperDetailsForItems(items, dependencies, {
+      shouldContinue: () => false,
+    });
+
+    assert.equal(requests, 0);
+    assert.deepEqual(stats, {
+      success: 0,
+      failed: 0,
+      skipped: 0,
+      stopped: true,
+    });
+  });
+
+  it("stops before syncing the next duplicate once the batch session ends", async function () {
+    const items = [fakeItem(1), fakeItem(2)];
+    const synced: number[] = [];
+    const dependencies: FetchDependencies = {
+      readPaperID: paperIDMap({ 1: "p1", 2: "p1" }),
+      async batchGetPapers() {
+        return { items: [detail("p1")] };
       },
       async syncDetail(item) {
         synced.push(item.id);
@@ -62,14 +209,16 @@ describe("paper batch fetch", function () {
     };
 
     const stats = await fetchPaperDetailsForItems(items, dependencies, {
-      onProgress(processed) {
-        progress.push(processed);
-      },
+      shouldContinue: () => synced.length < 1,
     });
 
-    assert.deepEqual(stats, { success: 1, failed: 1, skipped: 1 });
     assert.deepEqual(synced, [1]);
-    assert.deepEqual(progress, [1, 2, 3]);
+    assert.deepEqual(stats, {
+      success: 1,
+      failed: 0,
+      skipped: 0,
+      stopped: true,
+    });
   });
 
   it("persists status, fact-check message, tags, and verdict", async function () {
