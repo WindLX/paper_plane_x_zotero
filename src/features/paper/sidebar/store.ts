@@ -10,6 +10,7 @@ import {
 import { showPaperNotice } from "@/infra/zotero/paperNotificationService";
 import { getString } from "@/utils/locale";
 import { openStructuredJSONEditorDialog } from "../quickScanEditor/dialog";
+import { openProjectPickerDialog } from "../link/dialog";
 import {
   createEmptyAnalysisReport,
   createEmptyQuickScan,
@@ -37,7 +38,17 @@ const EMPTY_META: LocalPaperMetadata = {
   message: "",
 };
 
-export function createPaperSidebarStore(item?: Zotero.Item) {
+export function createPaperSidebarStore(
+  item?: Zotero.Item,
+  dependencies: {
+    apiClient?: ReturnType<typeof createPaperApiClient>;
+    pickProject?: typeof openProjectPickerDialog;
+    isActive?: () => boolean;
+  } = {},
+) {
+  const apiClient = dependencies.apiClient ?? paperApiClient;
+  const pickProject = dependencies.pickProject ?? openProjectPickerDialog;
+  const isActive = dependencies.isActive ?? (() => addon.data.alive);
   let state: PaperSidebarState = {
     item,
     isRegularItem: Boolean(item?.isRegularItem()),
@@ -114,7 +125,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
       await Promise.all(
         unresolved.map(async (projectID) => {
           try {
-            const detail = await paperApiClient.fetchProjectDetail(projectID);
+            const detail = await apiClient.fetchProjectDetail(projectID);
             projectNames[projectID] = detail.name || null;
           } catch (_error) {
             projectNames[projectID] = null;
@@ -143,7 +154,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
   };
 
   const syncAndPersistDetail = async (
-    detail: Awaited<ReturnType<typeof paperApiClient.fetchDetail>>,
+    detail: Awaited<ReturnType<typeof apiClient.fetchDetail>>,
   ) => {
     if (!state.item) {
       return;
@@ -154,7 +165,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
 
   const withAction = async (
     key: string,
-    fn: () => Promise<void>,
+    fn: () => Promise<void | false>,
     throttled?: () => boolean,
   ) => {
     if (throttled?.()) {
@@ -163,8 +174,8 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
 
     patchAction(key, { status: "loading" });
     try {
-      await fn();
-      patchAction(key, { status: "success" });
+      const result = await fn();
+      patchAction(key, { status: result === false ? "idle" : "success" });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       patchAction(key, { status: "error", error: message });
@@ -214,9 +225,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
           if (!state.item || !state.localMeta.paperID) {
             throw new Error("paper_id is empty");
           }
-          const detail = await paperApiClient.fetchDetail(
-            state.localMeta.paperID,
-          );
+          const detail = await apiClient.fetchDetail(state.localMeta.paperID);
           patch({ remoteDetail: detail });
           await resolveProjectNames();
           hydrateDraftFromRemoteDetail();
@@ -269,7 +278,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         if (!state.item || !state.localMeta.paperID) {
           throw new Error("paper_id is empty");
         }
-        const submit = await paperApiClient.reprocess(
+        const submit = await apiClient.reprocess(
           state.item,
           state.localMeta.paperID,
         );
@@ -312,7 +321,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
                   : undefined,
             }
           : undefined;
-        const detail = await paperApiClient.manualUpdate(
+        const detail = await apiClient.manualUpdate(
           state.item,
           state.localMeta.paperID,
           statusOverrides,
@@ -339,7 +348,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         updatedAt: state.remoteDetail.updated_at || null,
         validateJSON: validateQuickScanJSON,
         onSubmit: async (quickScan) => {
-          const detail = await paperApiClient.manualUpdate(
+          const detail = await apiClient.manualUpdate(
             state.item!,
             state.localMeta.paperID,
             undefined,
@@ -370,7 +379,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         updatedAt: state.remoteDetail.updated_at || null,
         validateJSON: validateSynthesisJSON,
         onSubmit: async (synthesisData) => {
-          const detail = await paperApiClient.manualUpdate(
+          const detail = await apiClient.manualUpdate(
             state.item!,
             state.localMeta.paperID,
             undefined,
@@ -400,7 +409,7 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         updatedAt: state.remoteDetail.updated_at || null,
         validateJSON: validateAnalysisJSON,
         onSubmit: async (analysisReport) => {
-          const detail = await paperApiClient.manualUpdate(
+          const detail = await apiClient.manualUpdate(
             state.item!,
             state.localMeta.paperID,
             undefined,
@@ -424,11 +433,8 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
 
       try {
         const response = content
-          ? await paperApiClient.updateAgentNote(
-              state.localMeta.paperID,
-              content,
-            )
-          : await paperApiClient.deleteAgentNote(state.localMeta.paperID);
+          ? await apiClient.updateAgentNote(state.localMeta.paperID, content)
+          : await apiClient.deleteAgentNote(state.localMeta.paperID);
         patch({
           remoteDetail: {
             ...state.remoteDetail,
@@ -448,19 +454,29 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         throw error;
       }
     },
-    async linkProject() {
+    async linkProject(source: "picker" | "manual" = "manual") {
+      if (!isActive() || state.actions.link.status === "loading") return;
       await withAction("link", async () => {
         if (!state.localMeta.paperID) {
           throw new Error("paper_id is empty");
         }
-        const projectID = state.draft.projectIDInput.trim();
+        let projectID = state.draft.projectIDInput.trim();
+        if (source === "picker") {
+          const { items } = await apiClient.listProjects();
+          if (!isActive()) return false;
+          if (!items.length) {
+            showPaperNotice(getString("link-no-projects"), "warning");
+            return false;
+          }
+          const project = await pickProject(items, 1);
+          if (!project || !isActive()) return false;
+          projectID = project.project_id;
+        }
         if (!projectID) {
           throw new Error("project_id is empty");
         }
-        await paperApiClient.linkProject(projectID, state.localMeta.paperID);
-        const detail = await paperApiClient.fetchDetail(
-          state.localMeta.paperID,
-        );
+        await apiClient.linkProject(projectID, state.localMeta.paperID);
+        const detail = await apiClient.fetchDetail(state.localMeta.paperID);
         patch({
           remoteDetail: detail,
           draft: {
@@ -483,10 +499,8 @@ export function createPaperSidebarStore(item?: Zotero.Item) {
         if (!state.localMeta.paperID) {
           throw new Error("paper_id is empty");
         }
-        await paperApiClient.unlinkProject(projectID, state.localMeta.paperID);
-        const detail = await paperApiClient.fetchDetail(
-          state.localMeta.paperID,
-        );
+        await apiClient.unlinkProject(projectID, state.localMeta.paperID);
+        const detail = await apiClient.fetchDetail(state.localMeta.paperID);
         patch({ remoteDetail: detail });
         primePaperListRemoteMetadata(detail);
         await resolveProjectNames();

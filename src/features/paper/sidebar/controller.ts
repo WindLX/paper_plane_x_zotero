@@ -7,7 +7,9 @@ export function mountPaperSidebar(
   item: Zotero.Item | undefined,
   setSectionSummary: (summary: string) => void,
 ) {
-  const store = createPaperSidebarStore(item);
+  const store = createPaperSidebarStore(item, {
+    isActive: () => body.isConnected && addon.data.alive,
+  });
 
   const rerender = () => {
     const vm = createPaperSidebarViewModel(store);

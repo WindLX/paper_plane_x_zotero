@@ -19,6 +19,15 @@ export function renderPaperSidebar(
   vm: PaperSidebarViewModel,
 ) {
   const doc = mountEl.ownerDocument || ztoolkit.getGlobal("document");
+  const manualOpen =
+    mountEl.querySelector<HTMLDetailsElement>(".ppx-project-manual")?.open ||
+    false;
+  const oldInput = mountEl.querySelector<HTMLInputElement>(
+    ".ppx-project-manual input",
+  );
+  const restoreInputFocus = oldInput !== null && doc.activeElement === oldInput;
+  const selectionStart = oldInput?.selectionStart ?? 0;
+  const selectionEnd = oldInput?.selectionEnd ?? 0;
   mountEl.replaceChildren();
   mountEl.className = "ppx-sidebar-root ppx-ui-root";
 
@@ -37,7 +46,10 @@ export function renderPaperSidebar(
 
   wrap.appendChild(renderActionBar(doc, vm));
   wrap.appendChild(renderSummaryPanel(doc, vm));
-  wrap.appendChild(renderProjectAssociationPanel(doc, vm));
+  const projectPanel = renderProjectAssociationPanel(doc, vm);
+  projectPanel.querySelector<HTMLDetailsElement>(".ppx-project-manual")!.open =
+    manualOpen;
+  wrap.appendChild(projectPanel);
 
   const sections = el(doc, "div", { className: "ppx-structured-sections" });
   vm.structuredSections.forEach((section) => {
@@ -70,4 +82,9 @@ export function renderPaperSidebar(
     }
   });
   wrap.appendChild(sections);
+  if (restoreInputFocus) {
+    const input = projectPanel.querySelector<HTMLInputElement>("input")!;
+    input.focus({ preventScroll: true });
+    input.setSelectionRange(selectionStart, selectionEnd);
+  }
 }

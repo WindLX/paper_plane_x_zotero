@@ -58,6 +58,7 @@ export function createPaperSidebarViewModel(
       saveAgentNote: (content) => store.saveAgentNote(content),
       updateDraft: (key, value) => store.updateDraft(key, value),
       linkProject: () => store.linkProject(),
+      selectProject: () => store.linkProject("picker"),
       unlinkProject: (projectID) => store.unlinkProject(projectID),
       copy: (text, successMessage) => store.copy(text, successMessage),
     },

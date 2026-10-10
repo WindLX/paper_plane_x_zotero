@@ -1,4 +1,12 @@
-import { Link, RefreshCw, RotateCw, Save, Unlink, Upload } from "lucide";
+import {
+  FolderKanban,
+  Link,
+  RefreshCw,
+  RotateCw,
+  Save,
+  Unlink,
+  Upload,
+} from "lucide";
 import { ProjectSummary } from "@/domain/paper";
 import { el } from "@/shared/ui/dom";
 import { getString } from "@/utils/locale";
@@ -150,6 +158,24 @@ export function renderProjectAssociationPanel(
     );
   }
 
+  const disabled =
+    !vm.data.localMeta.paperID || vm.ui.actions.link.status === "loading";
+  const pickerButton = createButton(
+    doc,
+    getString("paper-panel-action-select-project"),
+    FolderKanban,
+    vm.ui.actions.link.status === "loading",
+    async () => vm.actions.selectProject(),
+    getString("paper-panel-action-linking-project"),
+    "is-primary",
+  );
+  pickerButton.disabled = disabled;
+  const manual = el(doc, "details", { className: "ppx-project-manual" });
+  manual.appendChild(
+    el(doc, "summary", {
+      text: getString("paper-panel-project-link-manual"),
+    }),
+  );
   const inputRow = el(doc, "div", { className: "ppx-project-input-row" });
   const input = el(doc, "input", {
     className: "ppx-input",
@@ -157,24 +183,26 @@ export function renderProjectAssociationPanel(
       type: "text",
       value: vm.draft.projectIDInput,
       placeholder: getString("paper-panel-project-link-placeholder"),
+      "aria-label": getString("paper-panel-project-link-placeholder"),
     },
   }) as HTMLInputElement;
   input.addEventListener("input", () =>
     vm.actions.updateDraft("projectIDInput", input.value),
   );
-  inputRow.append(
-    input,
-    createButton(
-      doc,
-      getString("paper-panel-action-link-project"),
-      Link,
-      vm.ui.actions.link.status === "loading",
-      async () => vm.actions.linkProject(),
-      getString("paper-panel-action-linking-project"),
-    ),
+  input.disabled = disabled;
+  const manualButton = createButton(
+    doc,
+    getString("paper-panel-action-link-project"),
+    Link,
+    vm.ui.actions.link.status === "loading",
+    async () => vm.actions.linkProject(),
+    getString("paper-panel-action-linking-project"),
   );
+  manualButton.disabled = disabled;
+  inputRow.append(input, manualButton);
+  manual.appendChild(inputRow);
 
-  panel.content.append(list, inputRow);
+  panel.content.append(list, pickerButton, manual);
   return panel.root;
 }
 

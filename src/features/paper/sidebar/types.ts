@@ -63,6 +63,7 @@ export interface PaperSidebarViewModel {
     saveAgentNote(content: string): Promise<void>;
     updateDraft(key: keyof SidebarDraftState, value: string): void;
     linkProject(): Promise<void>;
+    selectProject(): Promise<void>;
     unlinkProject(projectID: string): Promise<void>;
     copy(text: string, successMessage: string): void;
   };
